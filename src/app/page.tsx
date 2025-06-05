@@ -1,8 +1,12 @@
+import Slider from "@/components/Slider";
+import Hero from "@/components/Hero";
+
 const HomePage = () => {
     return (
-        <div>
-            Homepage
-        </div>
+        <main>
+            <Slider />
+            <Hero/>
+        </main>
     )
 }
 
