@@ -21,10 +21,11 @@ export default function BlendShowcase() {
         <section className="py-10 px-4 bg-white">
             <div className="container mx-auto px-4">
 
-                <div className="grid grid-cols-2 md:grid-cols-4 justify-items-center mb-12">
+                <div className="flex flex-col lg:flex-row items-center justify-center p-5 md:grid-cols-2 lg:grid-cols-4 justify-items-center mb-12">
                     {blends.map((blend, index) => (
-                        <div key={index} className={`w-48 h-64 rounded-xl shadow-lg flex justify-center ${blend.color}`}>
-                            <img src={blend.image} alt={blend.flavor} className="w-48 h-auto mb-0" />
+                        <div key={index} className={` w-48 h-64 rounded-xl m-5 md:mx-10 shadow-lg flex flex-col items-center justify-items-center ${blend.color}`}>
+                            <p className='tracking-wide text-white pt-5'>{blend.flavor} </p>
+                            <img src={blend.image} alt={blend.flavor} className="w-full h-auto mt-10 px-5 hover:scale-110 transition duration-200 ease-in-out" />
                         </div>
                     ))}
                 </div>

@@ -29,7 +29,7 @@ export default function NavIcons() {
             <Image src='/profile.png' alt='profile' width={22} height={22} className='cursor-pointer'
                    onClick={handleProfile}/> {
             isProfileOpen && (
-                <div className='absolute p-4 rounded-md top-12 left-0 text-sm shadow-box z-20'>
+                <div className=' bg-white absolute p-4 rounded-md top-12 left-0 text-sm shadow-box z-20'>
                     <Link href='/profile'>Profile</Link>
                     <div className='mt-2 cursor-pointer'>Logout</div>
                 </div>

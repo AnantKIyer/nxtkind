@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 const Footer = () => {
     return (
-        <footer className="h-[40vh] bg-white px-6 md:px-12 py-8 overflow-y-clip">
+        <footer className="mb-0 bg-white px-6 md:px-12">
             {/* Tagline */}
             <div className="text-[1.4rem] md:text-2xl text-gray-800 mb-4">
                 NOURISHING YOUR BODY, SUSTAINING THE PLANET.
@@ -52,7 +52,7 @@ const Footer = () => {
 
                 {/* Centered Logo */}
                 <div className="mt-6 flex justify-center">
-                    <Image src='/nxt-logo.png' height={500} width={500} className=''  alt='Nxtkind Logo'/>
+                    <Image src='/footer-logo.png' height={500} width={500} className=''  alt='Nxtkind Logo'/>
                 </div>
             </div>
         </footer>
