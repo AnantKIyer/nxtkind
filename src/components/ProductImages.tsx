@@ -23,9 +23,9 @@ import { useState } from "react";
 // ];
 
 interface ProductImage {
-    _id: string | number;
-    image: {
-        url: string;
+    _id?: string;
+    image?: {
+        url?: string;
     };
 }
 
@@ -35,7 +35,7 @@ const ProductImages = ({ items }: { items: ProductImage[] }) => {
         <div className="">
             <div className="h-[500px] relative">
                 <Image
-                    src={items[index].image.url}
+                    src={items[index]?.image?.url || ''}
                     alt=""
                     fill
                     sizes="50vw"
@@ -50,7 +50,7 @@ const ProductImages = ({ items }: { items: ProductImage[] }) => {
                         onClick={() => setIndex(i)}
                     >
                         <Image
-                            src={item.image.url}
+                            src={item.image?.url || ''}
                             alt=""
                             fill
                             sizes="30vw"
