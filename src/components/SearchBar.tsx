@@ -15,7 +15,6 @@ export default function SearchBar() {
         if(name) {
             router.push(`/list?name=${name}`);
             console.log('===========Search for==============')
-            console.log(`/list?name=${name}`);
         }
     }
 

@@ -3,9 +3,9 @@ import Hero from "@/components/Hero";
 import BlendShowcase from "@/components/BlendShowcase";
 import ComparisonTable from "@/components/ComparisonTable";
 import Eden from "@/components/Eden";
-import ProductList from "@/components/ProductList";
+import IngredientsSection from "@/components/Ingredients";
 
-const HomePage =  async () => {
+const HomePage = async () => {
 
     // const wixClient = await wixClientServer();
     // const res = await wixClient.products.queryProducts().find();
@@ -18,12 +18,16 @@ const HomePage =  async () => {
             <BlendShowcase/>
             <ComparisonTable/>
             <Eden/>
-            {/*<div className='mt-24 px-4 lg:px-16 xl:32 2xl:px-64'>*/}
-            {/*    <h2 className='text-2xl'>Products</h2>*/}
-            {/*    <ProductList/>*/}
-            {/*</div>*/}
+            
+            <div className='mt-24 px-4 lg:px-16 xl:32 2xl:px-64'>
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tighter text-[#414143]">
+            Formulated with the World&apos;s <br/>
+            super Ingredients
+                </h1>
+               <IngredientsSection/>
+            </div>
         </main>
     )
 }
 
-export default HomePage
+export default HomePage;

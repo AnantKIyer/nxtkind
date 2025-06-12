@@ -1,51 +1,122 @@
-'use client';
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import React, {useState} from "react";
-import {useRouter} from 'next/navigation';
-import CartModal from "@/components/CartModal";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import CartModal from "./CartModal";
+import { useWixClient } from "@/hooks/useWixClientContext";
+import Cookies from "js-cookie";
+import { useCartStore } from "@/hooks/useCartStore";
 
-export default function NavIcons() {
-
+const NavIcons = () => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const router = useRouter();
+    const pathName = usePathname();
 
-    //TODO: Implement authentication here
-    const isLoggedIn = true;
+    const wixClient = useWixClient();
+    const isLoggedIn = wixClient.auth.loggedIn();
+
+    // TEMPORARY
+    // const isLoggedIn = false;
 
     const handleProfile = () => {
         if (!isLoggedIn) {
             router.push("/login");
+        } else {
+            setIsProfileOpen((prev) => !prev);
         }
-        setIsProfileOpen((prev) => !prev);
-    }
+    };
+
+    // AUTH WITH WIX-MANAGED AUTH
+
+    // const login = async () => {
+    //     try {
+    //         if (!process.env.NEXT_PUBLIC_WIX_CLIENT_ID) {
+    //             console.error("WIX_CLIENT_ID is not defined");
+    //             return;
+    //         }
+
+    //         const loginRequestData = wixClient.auth.generateOAuthData(
+    //             window.location.origin
+    //         );
+            
+    //         console.log("Login request data:", loginRequestData);
+    //         console.log(isLoggedIn)
+         
+    //         localStorage.setItem("oAuthRedirectData", JSON.stringify(loginRequestData));
+    //         const { authUrl } = await wixClient.auth.getAuthUrl(loginRequestData);
+            
+    //         if (!authUrl) {
+    //             console.error("No auth URL generated");
+    //             return;
+    //         }
+            
+    //         window.location.href = authUrl;
+    //         isLoggedIn = true;
+    //         setIsProfileOpen(true)
+    //     } catch (error) {
+    //         console.error("Login error:", error);
+    //     }
+    // };
+
+    const handleLogout = async () => {
+        setIsLoading(true);
+        Cookies.remove("refreshToken");
+        const { logoutUrl } = await wixClient.auth.logout(window.location.href);
+        setIsLoading(false);
+        setIsProfileOpen(false);
+        router.push(logoutUrl);
+    };
+
+
+    const { cart, counter, getCart } = useCartStore();
+
+    useEffect(() => {
+        getCart(wixClient);
+    }, [wixClient, getCart]);
 
     return (
-
-        // PROFILE
-        <div className='flex items-center gap-4 xl:gap-6 relative'>
-            <Image src='/profile.png' alt='profile' width={22} height={22} className='cursor-pointer'
-                   onClick={handleProfile}/> {
-            isProfileOpen && (
-                <div className=' bg-white absolute p-4 rounded-md top-12 left-0 text-sm shadow-box z-20'>
-                    <Link href='/profile'>Profile</Link>
-                    <div className='mt-2 cursor-pointer'>Logout</div>
+        <div className="flex items-center gap-4 xl:gap-6 relative">
+            <Image
+                src="/profile.png"
+                alt=""
+                width={22}
+                height={22}
+                className="cursor-pointer"
+                // onClick={login}
+                onClick={handleProfile}
+            />
+            {isProfileOpen && (
+                <div className="absolute p-4 rounded-md top-12 left-0 bg-white text-sm shadow-[0_3px_10px_rgb(0,0,0,0.2)] z-20">
+                    <Link href="/profile">Profile</Link>
+                    <div className="mt-2 cursor-pointer" onClick={handleLogout}>
+                        {isLoading ? "Logging out" : "Logout"}
+                    </div>
                 </div>
-            )
-        }
-            {/*NOTIFICATIONS*/}
-            <Image src='/notification.png' alt='notification' width={22} height={22}/>
-
-            {/*CART*/}
-            <div className='relative cursor-pointer' onClick={() => setIsCartOpen((prev) => !prev)}>
-
-                <Image src='/cart.png' alt='cart' width={22} height={22}/>
-                <div className='absolute -top-4 -right-4 w-6 h-6 bg-[#68D335] rounded-full text-white text-sm flex items-center justify-center'>2
+            )}
+            <Image
+                src="/notification.png"
+                alt=""
+                width={22}
+                height={22}
+                className="cursor-pointer"
+            />
+            <div
+                className="relative cursor-pointer"
+                onClick={() => setIsCartOpen((prev) => !prev)}
+            >
+                <Image src="/cart.png" alt="" width={22} height={22} />
+                <div className="absolute -top-4 -right-4 w-6 h-6 bg-[#68D335] rounded-full text-white text-sm flex items-center justify-center">
+                    {counter}
                 </div>
             </div>
-            {isCartOpen && <CartModal/>}
+            {isCartOpen && <CartModal />}
         </div>
-    )
-}
+    );
+};
+
+export default NavIcons;

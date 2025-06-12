@@ -5,16 +5,28 @@ import Link from "next/link";
 import DOMPurify from "isomorphic-dompurify";
 import Pagination from "./Pagination";
 
+interface SearchParams {
+    name?: string;
+    type?: string;
+    min?: number;
+    max?: number;
+    page?: string;
+    sort?: string;
+    cat?: string;
+}
+
+type SortableFields = "_id" | "name" | "slug" | "sku" | "productType" | "price" | "priceData.price" | "numericId" | "lastUpdated";
+
 const PRODUCT_PER_PAGE = 4;
 
 const ProductList = async ({
-                               categoryId,
-                               limit,
-                               searchParams,
-                           }: {
+    categoryId,
+    limit,
+    searchParams,
+}: {
     categoryId: string;
     limit?: number;
-    searchParams?: any;
+    searchParams: SearchParams;
 }) => {
     const wixClient = await wixClientServer();
 
@@ -34,16 +46,15 @@ const ProductList = async ({
                 ? parseInt(searchParams.page) * (limit || PRODUCT_PER_PAGE)
                 : 0
         );
-    // .find();
 
     if (searchParams?.sort) {
         const [sortType, sortBy] = searchParams.sort.split(" ");
 
         if (sortType === "asc") {
-            productQuery.ascending(sortBy);
+            productQuery.ascending(sortBy as SortableFields);
         }
         if (sortType === "desc") {
-            productQuery.descending(sortBy);
+            productQuery.descending(sortBy as SortableFields);
         }
     }
 
@@ -77,7 +88,7 @@ const ProductList = async ({
                     </div>
                     <div className="flex justify-between">
                         <span className="font-medium">{product.name}</span>
-                        <span className="font-semibold">${product.priceData?.price}</span>
+                        <span className="font-semibold"> &#8377;{product.priceData?.price}</span>
                     </div>
                     {product.additionalInfoSections && (
                         <div
@@ -85,7 +96,7 @@ const ProductList = async ({
                             dangerouslySetInnerHTML={{
                                 __html: DOMPurify.sanitize(
                                     product.additionalInfoSections.find(
-                                        (section: any) => section.title === "shortDesc"
+                                        (section: products.AdditionalInfoSection) => section.title === "shortDesc"
                                     )?.description || ""
                                 ),
                             }}
@@ -96,13 +107,13 @@ const ProductList = async ({
                     </button>
                 </Link>
             ))}
-            {searchParams?.cat || searchParams?.name ? (
+            {(searchParams?.cat || searchParams?.name) && (
                 <Pagination
                     currentPage={res.currentPage || 0}
                     hasPrev={res.hasPrev()}
                     hasNext={res.hasNext()}
                 />
-            ) : null}
+            )}
         </div>
     );
 };

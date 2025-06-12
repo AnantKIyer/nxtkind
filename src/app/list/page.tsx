@@ -32,8 +32,6 @@ const ListPage = async ({searchParams}: {
                </div>
            </div>
             <Filter/>
-
-            <h1>Products for you</h1>
             <ProductList
                 categoryId={
                     cat.collection?._id || "00000000-000000-000000-000000000001"

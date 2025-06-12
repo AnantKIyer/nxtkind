@@ -12,6 +12,7 @@ const Add = ({
     productId: string;
     variantId: string;
     stockNumber: number;
+
 }) => {
     const [quantity, setQuantity] = useState(1);
 
@@ -55,9 +56,10 @@ const Add = ({
                     </div>
                     {stockNumber < 1 ? (
                         <div className="text-xs">Product is out of stock</div>
+
                     ) : (
                         <div className="text-xs">
-                            Only <span className="text-orange-500">{stockNumber} items</span>{" "}
+                            Only <span className="text-orange-500">{stockNumber? stockNumber : "Limited time sale!"} items</span>{" "}
                             left!
                             <br /> {"Don't"} miss it
                         </div>
@@ -65,8 +67,7 @@ const Add = ({
                 </div>
                 <button
                     onClick={() => addItem(wixClient, productId, variantId, quantity)}
-                    disabled={isLoading}
-                    className="w-36 text-sm rounded-3xl ring-1 ring-lama text-lama py-2 px-4 hover:bg-[#68D335] hover:text-white disabled:cursor-not-allowed disabled:bg-pink-200 disabled:ring-0 disabled:text-white disabled:ring-none"
+                    className="w-36 text-sm rounded-3xl ring-1 ring-[#68D335] text-[#68D335] py-2 px-4 hover:bg-[#68D335] hover:text-white disabled:cursor-not-allowed disabled:bg-pink-200 disabled:ring-0 disabled:text-white disabled:ring-none"
                 >
                     Add to Cart
                 </button>

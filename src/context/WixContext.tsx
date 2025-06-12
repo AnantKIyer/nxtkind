@@ -9,6 +9,10 @@ import { redirects } from '@wix/redirects';
 
 const refreshToken = JSON.parse(Cookies.get("refreshToken") || "{}");
 
+if (!process.env.NEXT_PUBLIC_WIX_CLIENT_ID) {
+    console.error("WIX_CLIENT_ID is not defined in environment variables");
+}
+
 const wixClient = createClient({
     modules: {
         products,
@@ -17,7 +21,7 @@ const wixClient = createClient({
         redirects
     },
     auth: OAuthStrategy({
-        clientId: process.env.NEXT_PUBLIC_WIX_CLIENT_ID!,
+        clientId: process.env.NEXT_PUBLIC_WIX_CLIENT_ID || "",
         tokens: {
             refreshToken,
             accessToken: { value: "", expiresAt: 0 },
@@ -30,8 +34,8 @@ export type WixClient = typeof wixClient;
 export const WixClientContext = createContext<WixClient>(wixClient);
 
 export const WixClientContextProvider = ({
-                                             children,
-                                         }: {
+    children,
+}: {
     children: ReactNode;
 }) => {
     return (
