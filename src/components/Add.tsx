@@ -30,7 +30,7 @@ const Add = ({
 
     const wixClient = useWixClient();
 
-    const { addItem, isLoading } = useCartStore();
+    const { addItem } = useCartStore();
 
     return (
         <div className="flex flex-col gap-4">

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import CartModal from "./CartModal";
 import { useWixClient } from "@/hooks/useWixClientContext";
@@ -15,7 +15,6 @@ const NavIcons = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const router = useRouter();
-    const pathName = usePathname();
 
     const wixClient = useWixClient();
     const isLoggedIn = wixClient.auth.loggedIn();
@@ -73,7 +72,7 @@ const NavIcons = () => {
     };
 
 
-    const { cart, counter, getCart } = useCartStore();
+    const { counter, getCart } = useCartStore();
 
     useEffect(() => {
         getCart(wixClient);
