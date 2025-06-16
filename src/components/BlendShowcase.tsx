@@ -16,6 +16,8 @@ const icons = [
     { src: '/no-color.png', alt: 'No Artificial Colors' },
 ];
 
+// TODO: Remove the line and spread out
+
 export default function BlendShowcase() {
     return (
         <section className="py-10 px-4 bg-white">
@@ -30,7 +32,7 @@ export default function BlendShowcase() {
                     ))}
                 </div>
 
-                <div className="flex flex-wrap justify-center gap-4 md:gap-8 2xl:gap-20 border-t pt-6">
+                <div className="flex flex-wrap justify-between gap-4 md:gap-8 2xl:gap-20 pt-6 px-10">
                     {icons.map((icon, index) => (
                         <div key={index} className="flex flex-col items-center">
                             <Image src={icon.src} alt={icon.alt} width={40} height={40} className="w-10 h-10" />

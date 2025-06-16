@@ -2,9 +2,10 @@ import { wixClientServer } from "@/lib/wixClientServer";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-const OrderPage = async ({ params }: { params: { id: string } }) => {
-  const id = params.id;
+type id = Promise<{id: string}>
 
+const OrderPage = async ({ params }: { params: id }) => {
+  const { id } = await params;
   const wixClient = await wixClientServer();
 
   let order;

@@ -3,22 +3,23 @@ import Filter from "@/components/Filter";
 import ProductList from "@/components/ProductList";
 import {wixClientServer} from "@/lib/wixClientServer";
 
-const ListPage = async ({searchParams}: {
-    searchParams: {
-        cat?: string;
-        name?: string;
-        type?: string;
-        min?: number;
-        max?: number;
-        page?: string;
-        sort?: string;
-    }
- }) => {
-        const wixClient = await wixClientServer();
+type SearchParams = Promise<{
+    cat?: string;
+    name?: string;
+    type?: string;
+    min?: number;
+    max?: number;
+    page?: string;
+    sort?: string;
+}>
 
-        const cat = await wixClient.collections.getCollectionBySlug(
-            searchParams.cat || "all-products"
-        );
+const ListPage = async ({ searchParams }: { searchParams: SearchParams }) => {
+    const catParams = await searchParams; 
+    const wixClient = await wixClientServer();
+
+    const cat = await wixClient.collections.getCollectionBySlug(
+        catParams.cat || "all-products"
+    );
 
     return (
         <div className='px-4 md:px-8 lg:px-16 xl:32 2xl:px-64 relative'>
@@ -36,7 +37,7 @@ const ListPage = async ({searchParams}: {
                 categoryId={
                     cat.collection?._id || "00000000-000000-000000-000000000001"
                 }
-                searchParams={searchParams}
+                searchParams={catParams}
             />
         </div>
     )
