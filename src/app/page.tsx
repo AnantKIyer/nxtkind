@@ -3,6 +3,7 @@ import BlendShowcase from "@/components/BlendShowcase";
 import ComparisonTable from "@/components/ComparisonTable";
 import Eden from "@/components/Eden";
 import IngredientsSection from "@/components/Ingredients";
+import ParallaxContainer from "@/components/ParallaxContainer";
 
 const HomePage = async () => {
 
@@ -12,8 +13,10 @@ const HomePage = async () => {
 
     return (
         <main>
-            <Slider />
-            <BlendShowcase/>
+            <ParallaxContainer>
+                <Slider />
+                <BlendShowcase/>
+            </ParallaxContainer>
             <ComparisonTable/>
             <Eden/>
             

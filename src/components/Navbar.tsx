@@ -22,9 +22,10 @@ export default function Navbar() {
                         <Image src='/nxt-logo-bw.png' alt='Logo' height={100} width={100}/>
                     </Link>
                     <div className='hidden xl:flex gap-10 text-lg font-medium  items-baseline'>
+                        <Link href='/list'>Shop</Link>
+                        <Link href='/science'>Science</Link>
                         <Link href='/about'>About</Link>
-                        <Link href='/contact'>Contact</Link>
-                        <Link href='/shop'>Shop</Link>
+                        <Link href='/blog'>Blog</Link>
                     </div>
 
                 </div>
