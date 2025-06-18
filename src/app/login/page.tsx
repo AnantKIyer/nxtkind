@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useWixClient } from "@/hooks/useWixClientContext";
 import { LoginState } from "@wix/sdk";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import { useState } from "react";
 
 enum MODE {
@@ -106,14 +105,6 @@ export default function LoginPage() {
       switch (response?.loginState) {
         case LoginState.SUCCESS:
           setSuccess("Successful! You are being redirected.");
-          const tokens = await wixClient.auth.getMemberTokensForDirectLogin(
-            response.data.sessionToken!
-          );
-
-          Cookies.set("refreshToken", JSON.stringify(tokens.refreshToken), {
-            expires: 2,
-          });
-          wixClient.auth.setTokens(tokens);
           router.push("/");
           break;
         case LoginState.FAILURE:

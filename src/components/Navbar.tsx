@@ -4,6 +4,15 @@ import Image from "next/image";
 import SearchBar from "@/components/SearchBar";
 import NavIcons from "@/components/NavIcons";
 
+
+const menuItems = [
+    {label: 'Shop', href: '/list'},
+    {label: 'Science', href: '/'},
+    {label: 'About', href: '/'},
+    {label: 'Blog', href: '/'},
+
+]
+
 export default function Navbar() {
     return (
         <div className='h-20 px-4 md:px-8 lg:px-16 xl:32 2xl:px-64 sticky bg-transparent top-0 backdrop-blur-sm z-20'>
@@ -12,7 +21,7 @@ export default function Navbar() {
                 <Link href='/' className='flex items-center'>
                     <Image src='/nxt-logo-bw.png' alt='Logo' width={100} height={100} />
                 </Link>
-                <Menu />
+                <Menu menuItems={menuItems} />
             </div>
             {/*BIGGER SCREENS*/}
             <div className='hidden md:flex items-center h-full justify-between gap-8'>
@@ -22,10 +31,14 @@ export default function Navbar() {
                         <Image src='/nxt-logo-bw.png' alt='Logo' height={100} width={100}/>
                     </Link>
                     <div className='hidden xl:flex gap-10 text-lg font-medium  items-baseline'>
-                        <Link href='/list'>Shop</Link>
+                        {menuItems.map((item) => (
+                            <Link key={item.label} href={item.href}>{item.label}</Link>
+                        ))}
+                        
+                        {/* <Link href='/list'>Shop</Link>
                         <Link href='/science'>Science</Link>
                         <Link href='/about'>About</Link>
-                        <Link href='/blog'>Blog</Link>
+                        <Link href='/blog'>Blog</Link> */}
                     </div>
 
                 </div>
