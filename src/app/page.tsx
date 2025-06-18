@@ -1,5 +1,4 @@
 import Slider from "@/components/Slider";
-import Hero from "@/components/Hero";
 import BlendShowcase from "@/components/BlendShowcase";
 import ComparisonTable from "@/components/ComparisonTable";
 import Eden from "@/components/Eden";
@@ -14,7 +13,6 @@ const HomePage = async () => {
     return (
         <main>
             <Slider />
-            <Hero/>
             <BlendShowcase/>
             <ComparisonTable/>
             <Eden/>
