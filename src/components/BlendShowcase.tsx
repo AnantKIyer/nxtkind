@@ -7,7 +7,7 @@ const blends = [
     { flavor: 'VANILLA', color: 'bg-green-500', image: '/vanilla-green.png', url:'/vanilla-coffee-flavour' },
     { flavor: 'CHOCOLATE', color: 'bg-orange-500', image: '/chocolate-orange.png', url:'/chocolate-flavour' },
     { flavor: 'HYPERBEAN', color: 'bg-red-600', image: '/hyperbean-red.png', url:'/hyperbean-red-flavour' },
-    { flavor: 'Hazlenut', color: 'bg-cyan-500', image: '/vanilla-blue.png', url:'/hazlenut-flavour' },
+    { flavor: 'HAZLENUT', color: 'bg-cyan-500', image: '/vanilla-blue.png', url:'/hazlenut-flavour' },
 ];
 
 export default function BlendShowcase() {
