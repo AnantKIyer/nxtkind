@@ -141,7 +141,7 @@ export default function LoginPage() {
   };
 
   return (
-    <section className="-mt-11 card bg-white z-20 rounded-t-4xl">
+    <section className="-mt-11 w-full bg-white">
       <div className="flex flex-col md:flex-row items-center justify-between px-6 md:px-16 py-16">
         {/* Text Section */}
         <div className="order-2 px-10 w-full md:w-3/4 text-center items-start md:text-left space-y-6">
