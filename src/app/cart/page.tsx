@@ -19,7 +19,7 @@ function hasSubtotal(cart: unknown): cart is { subtotal: { amount: number } } {
 
 const CartPage = () => {
   const wixClient = useWixClient();
-  const { cart, isLoading, addItem } = useCartStore();
+  const { cart, isLoading, addItem, removeItem } = useCartStore();
 
   const handleCheckout = async () => {
     try {
@@ -52,6 +52,33 @@ const CartPage = () => {
   const shipping = subtotal > 0 ? 0 : 0;
   const tax = subtotal > 0 ? 8 : 0; // Example static tax
   const total = Number(subtotal) + Number(shipping) + Number(tax);
+
+  // Add 1 to item quantity
+  const handleAdd = (item: currentCart.LineItem) => {
+    const productId = item.catalogReference?.catalogItemId || "";
+    const variantId = item.catalogReference?.options?.variantId || "";
+    if (productId) {
+      addItem(
+        wixClient,
+        productId,
+        variantId,
+        1 // Always add 1 more
+      );
+    }
+  };
+
+  // Subtract 1 from item quantity or remove if 1
+  const handleSubtract = (item: currentCart.LineItem) => {
+    const productId = item.catalogReference?.catalogItemId || "";
+    const variantId = item.catalogReference?.options?.variantId || "";
+    if (productId && item.quantity) {
+      if (item.quantity <= 1) {
+        removeItem(wixClient, item._id!); // Completely remove from cart
+      } else {
+        addItem(wixClient, productId, variantId, item.quantity - 1); // Decrease quantity
+      }
+    }
+  };
 
   return (
     <div className="min-h-[calc(100vh-80px)] bg-white flex flex-col px-2 md:px-8 py-8">
@@ -94,35 +121,13 @@ const CartPage = () => {
                           <button
                             className="w-7 h-7 rounded-full border border-gray-300 flex items-center justify-center text-xl text-gray-700 hover:bg-gray-100"
                             disabled={isLoading || (item.quantity ?? 1) <= 1}
-                            onClick={() => {
-                              const productId = item.catalogReference?.catalogItemId || "";
-                              const variantId = item.catalogReference?.options?.variantId || "";
-                              if (productId) {
-                                addItem(
-                                  wixClient,
-                                  productId,
-                                  variantId,
-                                  (item.quantity ?? 1) - 1
-                                );
-                              }
-                            }}
+                            onClick={() => handleSubtract(item)}
                           >-</button>
                           <span className="text-lg font-medium w-6 text-center">{item.quantity ?? 1}</span>
                           <button
                             className="w-7 h-7 rounded-full border border-gray-300 flex items-center justify-center text-xl text-gray-700 hover:bg-gray-100"
                             disabled={isLoading}
-                            onClick={() => {
-                              const productId = item.catalogReference?.catalogItemId || "";
-                              const variantId = item.catalogReference?.options?.variantId || "";
-                              if (productId) {
-                                addItem(
-                                  wixClient,
-                                  productId,
-                                  variantId,
-                                  (item.quantity ?? 1) + 1
-                                );
-                              }
-                            }}
+                            onClick={() => handleAdd(item)}
                           >+</button>
                         </div>
                       </div>
