@@ -5,10 +5,14 @@ import { useCartStore } from "@/hooks/useCartStore";
 import { media as wixMedia } from "@wix/sdk";
 import { useWixClient } from "@/hooks/useWixClientContext";
 import { currentCart } from "@wix/ecom";
+import { useRouter } from "next/navigation";
 
 const CartModal = () => {
   // TEMPORARY
   // const cartItems = true;
+
+
+  const router = useRouter();
 
   const wixClient = useWixClient();
   const { cart, isLoading, removeItem } = useCartStore();
@@ -110,7 +114,7 @@ const CartModal = () => {
               Shipping and taxes calculated at checkout.
             </p>
             <div className="flex justify-between text-sm">
-              <button className="rounded-md py-3 px-4 ring-1 ring-gray-300">
+              <button className="rounded-md py-3 px-4 ring-1 ring-gray-300" onClick={() => router.push('/cart')}>
                 View Cart
               </button>
               <button

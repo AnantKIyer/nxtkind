@@ -16,8 +16,9 @@ const HomePage = async () => {
             <ParallaxContainer>
                 <Slider />
                 <BlendShowcase/>
+                <ComparisonTable/>
             </ParallaxContainer>
-            <ComparisonTable/>
+            
             <Eden/>
             
             <div className='mt-24 px-4 lg:px-16 xl:32 2xl:px-64'>
