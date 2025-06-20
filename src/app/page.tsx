@@ -1,7 +1,6 @@
 import Slider from "@/components/Slider";
 import BlendShowcase from "@/components/BlendShowcase";
 import ComparisonTable from "@/components/ComparisonTable";
-import Eden from "@/components/Eden";
 import IngredientsSection from "@/components/Ingredients";
 import ParallaxContainer from "@/components/ParallaxContainer";
 
@@ -16,11 +15,8 @@ const HomePage = async () => {
             <ParallaxContainer>
                 <Slider />
                 <BlendShowcase/>
-                <ComparisonTable/>
-            </ParallaxContainer>
-            
-            <Eden/>
-            
+            </ParallaxContainer> 
+            <ComparisonTable/> 
             <div className='mt-24 px-4 lg:px-16 xl:32 2xl:px-64'>
             <h1 className="text-4xl md:text-5xl font-bold tracking-tighter text-[#414143]">
             Formulated with the World&apos;s <br/>
