@@ -3,6 +3,7 @@ import BlendShowcase from "@/components/BlendShowcase";
 import ComparisonTable from "@/components/ComparisonTable";
 import IngredientsSection from "@/components/Ingredients";
 import ParallaxContainer from "@/components/ParallaxContainer";
+import ReviewCarousel from "@/components/ReviewsCarousel";
 
 const HomePage = async () => {
 
@@ -24,6 +25,7 @@ const HomePage = async () => {
                 </h1>
                <IngredientsSection/>
             </div>
+            <ReviewCarousel/>
         </main>
     )
 }

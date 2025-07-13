@@ -38,10 +38,21 @@ export default function IngredientsSection() {
 
     const [modal, setModal] = useState(false)
     const [selectedIngredient, setSelectedIngredient] = useState('')
+    const [isAnimating, setIsAnimating] = useState(false)
 
     const handleModal = (ingredient: string) => {
         setModal(true);
         setSelectedIngredient(ingredient);
+        setTimeout(() => {
+            setIsAnimating(true);
+        }, 10);
+    }
+
+    const closeModal = () => {
+        setIsAnimating(false);
+        setTimeout(() => {
+            setModal(false);
+        }, 300); // Match the transition duration
     }
 
   return (
@@ -49,10 +60,12 @@ export default function IngredientsSection() {
       {modal && (
         <div 
           className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 transition-opacity duration-300 ease-in-out"
-          onClick={() => setModal(false)}
+          onClick={closeModal}
         >
           <div 
-            className="rounded-lg max-w-md transition-all duration-300 ease-in-out transform scale-100"
+            className={`rounded-lg max-w-md transition-all duration-300 ease-in-out transform ${
+              isAnimating ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-full scale-95 opacity-0'
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
             <Image

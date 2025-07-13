@@ -75,7 +75,9 @@ const CartPage = () => {
       if (item.quantity <= 1) {
         removeItem(wixClient, item._id!); // Completely remove from cart
       } else {
-        addItem(wixClient, productId, variantId, item.quantity - 1); // Decrease quantity
+        const quantity = item.quantity-1;
+        removeItem(wixClient, item._id!);
+        addItem(wixClient, productId, variantId, quantity); // Decrease quantity
       }
     }
   };
