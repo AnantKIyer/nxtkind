@@ -1,147 +1,132 @@
 'use client';
 
 import { useState } from 'react';
-import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
 
-type Review = {
-  image: string;
-  name: string;
-  title: string;
+interface Review {
+  image: string; // reviewer photo url
+  heading: string;
   quote: string;
-};
+  author: string;
+}
 
-const reviews: Review[] = [
-  {
-    image: '/mira.png',
-    name: 'Mira K.',
-    title: 'A DAILY RITUAL I LOVE',
-    quote:
-      'I was looking for something nourishing yet easy to prepare, and this has been a game-changer. Light on the stomach, but keeps me full and energized.',
-  },
-  {
-    image: '/john.png',
-    name: 'John D.',
-    title: 'PERFECT START TO MY MORNINGS',
-    quote:
-      'This drink helps me stay focused and refreshed throughout the day. I actually look forward to it every morning.',
-  },
-  {
-    image: '/raj.png',
-    name: 'Raj P.',
-    title: 'ENERGY WITHOUT THE CRASH',
-    quote:
-      'Gives me clean energy with no crashes. It fits right into my busy schedule and feels great.',
-  },
-];
+interface ReviewsCarouselProps {
+  reviews: Review[];
+}
 
-export default function ReviewCarousel() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const currentReview = reviews[currentIndex];
-  const prevIndex = (currentIndex - 1 + reviews.length) % reviews.length;
-  const nextIndex = (currentIndex + 1) % reviews.length;
+export default function ReviewsCarousel({ reviews }: ReviewsCarouselProps) {
+  const [current, setCurrent] = useState(0);
 
-  // Auto-advance every 5 seconds
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % reviews.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
+  const prev = () => setCurrent((c) => (c - 1 + reviews.length) % reviews.length);
+  const next = () => setCurrent((c) => (c + 1) % reviews.length);
+
+  // Handle fewer than 3 reviews gracefully
+  const getIndex = (offset: number) => {
+    if (reviews.length < 3) return (current + offset + reviews.length) % reviews.length;
+    return (current + offset + reviews.length) % reviews.length;
+  };
 
   return (
-    <div className="w-full px-4 py-16 flex flex-col items-center">
-      <h2 className="text-3xl md:text-4xl font-bold text-left w-full max-w-4xl mb-16 tracking-tight">
+    <section className="w-full py-12 flex flex-col items-center relative select-none">
+      <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-center mb-10">
         SIPS OF WELLNESS, SHARED BY YOU.
       </h2>
-
-      <div className="relative w-full max-w-4xl flex justify-center items-center" style={{ minHeight: 320 }}>
-        {/* Left Side Partial Image */}
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 z-0 hidden md:block">
-          <div
-            className="w-32 h-44 overflow-hidden rounded-xl opacity-60 grayscale shadow-lg cursor-pointer"
-            onClick={() => setCurrentIndex(prevIndex)}
+      <div className="relative flex items-center justify-center w-full max-w-3xl min-h-[320px]">
+        {/* Left side image (partially visible, clickable) */}
+        {reviews.length > 1 && (
+          <motion.button
+            className="hidden md:block absolute left-0 z-10 focus:outline-none"
+            onClick={prev}
+            aria-label="Previous Review"
+            whileTap={{ scale: 0.95 }}
           >
-            <Image
-              src={reviews[prevIndex].image}
-              alt={reviews[prevIndex].name}
-              width={128}
-              height={176}
-              className="object-cover w-full h-full"
-              style={{ objectPosition: 'right' }}
+            <motion.img
+              src={reviews[getIndex(-1)].image}
+              alt=""
+              className="h-40 w-40 object-cover rounded-xl shadow-lg opacity-70 translate-x-[-30%] grayscale"
+              initial={{ scale: 0.85, opacity: 0.5 }}
+              animate={{ scale: 0.92, opacity: 0.7 }}
+              exit={{ scale: 0.8, opacity: 0.3 }}
+              draggable={false}
             />
-          </div>
-        </div>
+          </motion.button>
+        )}
 
-        {/* Main Review Box */}
-        <div className="relative z-10 w-full flex justify-center">
-          <AnimatePresence mode="wait">
+        {/* Center review */}
+        <AnimatePresence initial={false} mode="wait">
+          <motion.div
+            key={current}
+            className="relative bg-white border rounded-xl shadow-md flex items-center px-4 md:px-10 py-8 w-full z-20"
+            initial={{ opacity: 0, x: 80 }}
+            animate={{ opacity: 1, x: 0, scale: 1.04, zIndex: 2 }}
+            exit={{ opacity: 0, x: -80 }}
+            transition={{ type: 'spring', duration: 0.5 }}
+          >
+            <motion.img
+              src={reviews[current].image}
+              alt=""
+              className="h-40 w-40 min-w-[10rem] object-cover rounded-xl mr-6 shadow-md"
+              initial={{ scale: 0.95, opacity: 0.8 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.35 }}
+              draggable={false}
+            />
             <motion.div
-              key={currentIndex}
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -40 }}
-              transition={{ duration: 0.4 }}
-              className="flex flex-col md:flex-row bg-white border rounded-xl shadow-md p-8 items-center gap-8 w-full max-w-2xl min-h-[260px] cursor-pointer"
-              onClick={() => setCurrentIndex(currentIndex)}
+              className="flex flex-col justify-between h-full flex-1 min-w-0"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3, delay: 0.15 }}
             >
-              <Image
-                src={currentReview.image}
-                alt={currentReview.name}
-                width={160}
-                height={160}
-                className="rounded-xl object-cover shadow-md"
-                onClick={(e) => { e.stopPropagation(); setCurrentIndex(currentIndex); }}
-                style={{ cursor: 'pointer' }}
-              />
-              <div className="flex-1 flex flex-col justify-center h-full">
-                <h3 className="text-2xl md:text-2xl font-bold mb-4 text-gray-800 leading-tight">
-                  &ldquo;{currentReview.title}&rdquo;
-                </h3>
-                <p className="text-gray-600 text-base md:text-lg mb-8 max-w-xl">
-                  {currentReview.quote}
-                </p>
-                <p className="text-right text-gray-700 font-medium text-base">— {currentReview.name}</p>
-              </div>
+              <h3 className="font-bold text-lg md:text-xl mb-2 uppercase">{reviews[current].heading}</h3>
+              <blockquote className="text-gray-700 text-base md:text-lg mb-6">{`“${reviews[current].quote}”`}</blockquote>
+              <div className="text-right font-medium text-gray-700">{`— ${reviews[current].author}`}</div>
             </motion.div>
-          </AnimatePresence>
-        </div>
+          </motion.div>
+        </AnimatePresence>
 
-        {/* Right Side Partial Image */}
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 z-0 hidden md:block">
-          <div
-            className="w-32 h-44 overflow-hidden rounded-xl opacity-60 grayscale shadow-lg cursor-pointer"
-            onClick={() => setCurrentIndex(nextIndex)}
+        {/* Right side image (partially visible, clickable) */}
+        {reviews.length > 1 && (
+          <motion.button
+            className="hidden md:block absolute right-0 z-10 focus:outline-none"
+            onClick={next}
+            aria-label="Next Review"
+            whileTap={{ scale: 0.95 }}
           >
-            <Image
-              src={reviews[nextIndex].image}
-              alt={reviews[nextIndex].name}
-              width={128}
-              height={176}
-              className="object-cover w-full h-full"
-              style={{ objectPosition: 'left' }}
+            <motion.img
+              src={reviews[getIndex(1)].image}
+              alt=""
+              className="h-40 w-40 object-cover rounded-xl shadow-lg opacity-70 translate-x-[30%] grayscale"
+              initial={{ scale: 0.85, opacity: 0.5 }}
+              animate={{ scale: 0.92, opacity: 0.7 }}
+              exit={{ scale: 0.8, opacity: 0.3 }}
+              draggable={false}
             />
-          </div>
-        </div>
+          </motion.button>
+        )}
       </div>
 
-      {/* Thumbnails for navigation (optional, below main box) */}
-      <div className="flex gap-4 mt-10 md:mt-12">
-        {reviews.map((review, index) => {
-          const isActive = index === currentIndex;
-          return (
-            <button
-              key={index}
-              className={`rounded-full border-2 transition-all duration-200 w-4 h-4 focus:outline-none ${
-                isActive ? 'bg-gray-800 border-gray-800' : 'bg-gray-300 border-gray-300'
-              }`}
-              onClick={() => setCurrentIndex(index)}
-              aria-label={`Show review by ${review.name}`}
-            />
-          );
-        })}
-      </div>
-    </div>
+      {/* Mobile navigation */}
+      {reviews.length > 1 && (
+        <div className="flex justify-center gap-3 mt-8 md:hidden">
+          <button
+            type="button"
+            className="h-10 w-10 rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300 transition"
+            onClick={prev}
+            aria-label="Previous Review"
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            className="h-10 w-10 rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300 transition"
+            onClick={next}
+            aria-label="Next Review"
+          >
+            ›
+          </button>
+        </div>
+      )}
+    </section>
   );
 }

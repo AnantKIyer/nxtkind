@@ -56,7 +56,7 @@ export default function IngredientsSection() {
     }
 
   return (
-    <section className="py-16 mx-auto">
+    <section className="py-16 mx-auto px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
       {modal && (
         <div 
           className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 transition-opacity duration-300 ease-in-out"

@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 const Footer = () => {
     return (
-        <footer className="mb-0 bg-white px-6 md:px-12">
+        <footer className="mb-0 bg-white px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
             {/* Tagline */}
             <div className="text-[1.4rem] md:text-2xl text-gray-800 mb-4">
                 NOURISHING YOUR BODY, SUSTAINING THE PLANET.

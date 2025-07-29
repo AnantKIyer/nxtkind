@@ -8,14 +8,14 @@ import NavIcons from "@/components/NavIcons";
 const menuItems = [
     {label: 'Shop', href: '/list'},
     {label: 'Science', href: '/'},
-    {label: 'About', href: '/'},
+    {label: 'About', href: '/about'},
     {label: 'Blog', href: '/'},
 
 ]
 
 export default function Navbar() {
     return (
-        <div className='h-20 px-4 md:px-8 lg:px-16 xl:32 2xl:px-64 sticky bg-transparent top-0 backdrop-blur-sm z-20'>
+        <div className='h-20 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 sticky bg-transparent top-0 backdrop-blur-sm z-20'>
                 {/*MOBILE*/}
             <div className='h-20 flex items-center justify-between md:hidden'>
                 <Link href='/' className='flex items-center'>
