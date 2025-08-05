@@ -12,9 +12,9 @@ export default function SearchBar() {
         const formData = new FormData(e.currentTarget);
         const name = formData.get("search") as string;
 
-        if(name) {
-            router.push(`/list?name=${name}`);
-            console.log('===========Search for==============')
+        if(name && name.trim()) {
+            router.push(`/list?name=${encodeURIComponent(name.trim())}`);
+            console.log('===========Search for==============', name.trim());
         }
     }
 

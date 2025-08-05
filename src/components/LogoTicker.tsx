@@ -13,6 +13,12 @@ const icons = [
     { src: '/natural.png', alt: '100% Natural' },
     { src: '/gmo-free.png', alt: 'Non-GMO' },
     { src: '/no-color.png', alt: 'No Artificial Colors' },
+    { src: '/no-preservatives.png', alt: 'No Preservatives' },
+    { src: '/no-artificial-sweetener.png', alt: 'No Artificial Sweeteners' },
+    { src: '/protein-rich.png', alt: '41g Protein' },
+    { src: '/vitamins.png', alt: '25+ Vitamins' },
+    { src: '/vegan.png', alt: '100% Plant Based' },
+    { src: '/zero-sugar.png', alt: '0% Sugar' },
 ];
 
 export const LogoTicker = () => {

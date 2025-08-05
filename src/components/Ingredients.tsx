@@ -2,105 +2,110 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-import { FaChevronDown } from 'react-icons/fa';
-
-
+import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 
 const ingredients = [
   {
-    name: 'PEA PROTEIN',
-    image: '/pea-protein.png',
-    modal: '/pea-modal.png'
+    name: 'Pea protein',
+    image: '/pea-protein.jpg',
+    description: 'A clean, complete source of plant protein rich in BCAAs. Supports muscle recovery, satiety, and metabolic health without the heaviness of dairy. Easy to digest, light on the gut, big on performance.'
   },
   {
-    name: 'FLAXSEED',
-    image: '/flaxseed.png',
-    modal: '/flaxseed-modal.png'
+    name: 'Brown rice protein',
+    image: '/brown-rice.jpg',
+    description: 'Naturally hypoallergenic and rich in essential amino acids like cysteine and methionine. Complements pea protein to create a complete amino acid profile fueling strength, endurance, and lean muscle maintenance.'
   },
   {
-    name: 'OATS',
-    image: '/oats.png',
-    modal: '/oats-modal.png',
+    name: 'Stevia',
+    image: '/stevia.jpg',
+    description: 'A plant-derived sweetener with zero calories and zero blood sugar impact. Adds natural sweetness without added sugar, artificial aftertaste, or energy crashes. Ideal for daily, clean-eating routines.'
   },
   {
-    name: 'FABA BEAN PROTEIN',
-    image: '/fabia-bean.png',
-    modal: '/faba-bean-modal.png',
+    name: 'Green tea',
+    image: '/green-tea.jpg',
+    description: 'Naturally rich in antioxidants like EGCG, which support fat metabolism, cellular health, and focus. A clean, plant-powered pick-me-up for sharper mornings and sustained clarity.'
   },
   {
-    name: 'COCONUT',
-    image: '/coconut.png',
-    modal: '/coconut-modal.png',
+    name: 'Coconut',
+    image: '/coconut.jpg',
+    description: 'Medium-chain triglycerides (MCTs) from coconuts provide fast, clean-burning fuel for your brain and body. Known to support energy, focus, and satiety without spiking insulin or storing as fat.'
   },
 ];
 
 export default function IngredientsSection() {
+  const [openAccordion, setOpenAccordion] = useState<number | null>(null);
 
-    const [modal, setModal] = useState(false)
-    const [selectedIngredient, setSelectedIngredient] = useState('')
-    const [isAnimating, setIsAnimating] = useState(false)
-
-    const handleModal = (ingredient: string) => {
-        setModal(true);
-        setSelectedIngredient(ingredient);
-        setTimeout(() => {
-            setIsAnimating(true);
-        }, 10);
-    }
-
-    const closeModal = () => {
-        setIsAnimating(false);
-        setTimeout(() => {
-            setModal(false);
-        }, 300); // Match the transition duration
-    }
+  const toggleAccordion = (index: number) => {
+    setOpenAccordion(openAccordion === index ? null : index);
+  };
 
   return (
     <section className="py-16 mx-auto px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
-      {modal && (
-        <div 
-          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 transition-opacity duration-300 ease-in-out"
-          onClick={closeModal}
-        >
-          <div 
-            className={`rounded-lg max-w-md transition-all duration-300 ease-in-out transform ${
-              isAnimating ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-full scale-95 opacity-0'
-            }`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Image
-              src={selectedIngredient}
-              alt='Modal'
-              height={600} 
-              width={600} 
-              className="transition-opacity duration-300 ease-in-out"
-            />
-          </div>
-        </div>
-      )}
       <div className="container mx-auto px-3">
-        <div className="flex flex-wrap justify-center gap-[38px]">
-          {ingredients.map((item) => (
+        <h2 className="text-3xl md:text-5xl font-bold text-center mb-10">
+          Formulated <span className='font-light'>with the </span>
+          <br />
+           &ensp; &ensp; Super Ingredients
+        </h2>
+        <div className="max-w-2xl mx-auto space-y-3">
+          {ingredients.map((item, index) => (
             <div
               key={item.name}
-              className="relative w-44 h-[340px] rounded-xl overflow-hidden shadow-xl group"
-              onClick={() => handleModal(item.modal)}
+              className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300 ease-in-out"
             >
-              <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                style={{ backgroundImage: `url(${item.image})` }}
-              />
-              <div className="absolute inset-0 bg-black/50 flex flex-col justify-between items-center p-4 text-white z-10">
-                <div className="text-lg font-bold text-center leading-tight">
-                  {item.name}
+              <button
+                onClick={() => toggleAccordion(index)}
+                className="w-full flex items-center justify-between p-4"
+              >
+                {openAccordion === index ? (
+                  // Expanded state: text on left, image on right
+                  <>
+                    <div className="flex items-center space-x-3 transition-all duration-500 ease-out">
+                      <FaChevronLeft className="text-gray-500 text-sm transition-transform duration-300 ease-out" />
+                      <span className="text-gray-700 font-bold text-xl transition-all duration-500 ease-out">{item.name}</span>
+                    </div>
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      width={40}
+                      height={40}
+                      className="rounded object-cover transition-all duration-500 ease-out"
+                    />
+                  </>
+                ) : (
+                  // Collapsed state: image on left, text on right
+                  <>
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      width={40}
+                      height={40}
+                      className="rounded object-cover transition-all duration-500 ease-out"
+                    />
+                    <div className="flex items-center space-x-3 transition-all duration-500 ease-out">
+                      <span className="text-gray-700 font-bold text-xl transition-all duration-500 ease-out">{item.name}</span>
+                      <FaChevronRight className="text-gray-500 text-sm transition-transform duration-300 ease-out" />
+                    </div>
+                  </>
+                )}
+              </button>
+              
+              <div className={`overflow-hidden transition-all duration-700 ease-in-out ${
+                openAccordion === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+              }`}>
+                <div className={`p-4 pt-0 transition-all duration-500 ease-out ${
+                  openAccordion === index ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'
+                }`}>
+                  <p className="text-lg text-gray-600 leading-relaxed">
+                    {item.description}
+                  </p>
                 </div>
-                <FaChevronDown className="text-white text-xs opacity-80" />
               </div>
             </div>
           ))}
         </div>
 
-        <p className="mt-12 text-gray-700 flex justify-center font-extrabold tracking-wide">
+        <p className="mt-12 text-gray-700 text-xl flex justify-center font-extrabold tracking-wide">
           Backed By Science, Chosen For Strength — From Core To Cardio.
         </p>
       </div>

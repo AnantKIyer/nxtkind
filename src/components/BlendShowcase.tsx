@@ -23,16 +23,16 @@ export default function BlendShowcase() {
                     <div className="flex items-center justify-center mt-10">
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 max-w-6xl mx-auto w-full">
                             {blends.map((blend, index) => (
-                                <div key={index} className={` flex flex-col items-center justify-center bg-white rounded-2xl shadow-lg py-6 border border-gray-100 hover:shadow-xl transition h-full`}>
+                                <div key={index} className={` flex flex-col items-center justify-center bg-white rounded-2xl shadow-lg py-4 px-6 border border-gray-100 hover:shadow-xl transition h-full`}>
                                     <Link href={blend.url} className="flex flex-col items-center justify-center h-full w-full">
-                                        <p className={`tracking-wide text-center  font-bold ${blend.color} text-lg mb-4`}>{blend.flavor}</p>
-                                        <div className="w-32 h-32 flex items-center justify-center mb-4">
+                                        <p className={`tracking-wide text-center font-bold ${blend.color} text-lg mb-3`}>{blend.flavor}</p>
+                                        <div className="w-full h-50 flex items-center justify-center mb-3">
                                             <Image 
                                                 src={blend.image} 
                                                 alt={blend.flavor} 
-                                                width={128} 
-                                                height={128} 
-                                                className="w-full h-full object-contain hover:scale-110 transition duration-200 ease-in-out" 
+                                                width={200} 
+                                                height={200} 
+                                                className="w-full h-full object-cover hover:scale-110 transition duration-200 ease-in-out" 
                                             />
                                         </div>
                                     </Link>

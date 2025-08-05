@@ -30,22 +30,59 @@ const ProductList = async ({
 }) => {
     const wixClient = await wixClientServer();
 
+    // Build base query without search filter
     const productQuery = wixClient.products
         .queryProducts()
-        .startsWith("name", searchParams?.name || "")
         .eq("collectionIds", categoryId)
         .hasSome(
             "productType",
             searchParams?.type ? [searchParams.type] : ["physical", "digital"]
         )
         .gt("priceData.price", searchParams?.min || 0)
-        .lt("priceData.price", searchParams?.max || 999999)
-        .limit(limit || PRODUCT_PER_PAGE)
-        .skip(
-            searchParams?.page
-                ? parseInt(searchParams.page) * (limit || PRODUCT_PER_PAGE)
-                : 0
+        .lt("priceData.price", searchParams?.max || 999999);
+
+    // If search term is provided, fetch more products for partial matching
+    const searchTerm = searchParams?.name?.trim();
+    let res;
+    
+    if (searchTerm && searchTerm !== "") {
+        // Fetch more products to allow for partial matching
+        const searchQuery = productQuery
+            .limit(50) // Fetch more products for partial matching
+            .skip(
+                searchParams?.page
+                    ? parseInt(searchParams.page) * (limit || PRODUCT_PER_PAGE)
+                    : 0
+            );
+        
+        const searchResults = await searchQuery.find();
+        
+        // Filter products for partial matches (case-insensitive)
+        const filteredItems = searchResults.items.filter((product: products.Product) =>
+            product.name?.toLowerCase().includes(searchTerm.toLowerCase())
         );
+        
+        // Create a new result object with filtered items
+        res = {
+            ...searchResults,
+            items: filteredItems.slice(0, limit || PRODUCT_PER_PAGE),
+            totalCount: filteredItems.length,
+            hasPrev: () => searchParams?.page ? parseInt(searchParams.page) > 0 : false,
+            hasNext: () => filteredItems.length > (limit || PRODUCT_PER_PAGE),
+            currentPage: searchParams?.page ? parseInt(searchParams.page) : 0
+        };
+    } else {
+        // No search term, use normal pagination
+        const paginatedQuery = productQuery
+            .limit(limit || PRODUCT_PER_PAGE)
+            .skip(
+                searchParams?.page
+                    ? parseInt(searchParams.page) * (limit || PRODUCT_PER_PAGE)
+                    : 0
+            );
+        
+        res = await paginatedQuery.find();
+    }
 
     if (searchParams?.sort) {
         const [sortType, sortBy] = searchParams.sort.split(" ");
@@ -57,8 +94,6 @@ const ProductList = async ({
             productQuery.descending(sortBy as SortableFields);
         }
     }
-
-    const res = await productQuery.find();
 
     return (
         <div className="mt-12 pb-12 flex gap-x-8 gap-y-16 justify-between flex-wrap">
