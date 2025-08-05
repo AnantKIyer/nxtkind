@@ -296,7 +296,7 @@ export default function LoginPage() {
         {/* Image Section */}
         <div className=" hidden order-1 w-full md:w-1/4 mt-0 md:flex justify-center">
           <Image
-            src="/login-bg.png" // replace with your image in /public
+            src="/nxt_vertical_banner.jpg" // replace with your image in /public
             alt="Hero Image"
             width={500}
             height={700}

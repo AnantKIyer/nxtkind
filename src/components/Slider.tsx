@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const slides = [
@@ -9,7 +10,7 @@ const slides = [
         title: "Meal in one",
         description: "Sale! Up to 50% off!",
         img: "/nxtBanner_01.jpg",
-        url: "/",
+        url: "/hyperbean-red-flavour",
         bg: "bg-gradient-to-r from-yellow-50 to-pink-50",
     },
     {
@@ -17,7 +18,7 @@ const slides = [
         title: "Fulfillment in a bottle",
         description: "Sale! Up to 50% off!",
         img: "/nxtBanner_02.jpg",
-        url: "/",
+        url: "/vanilla-coffee-flavour",
         bg: "bg-gradient-to-r from-pink-50 to-blue-50",
     },
     {
@@ -55,6 +56,7 @@ const Slider = () => {
                        
                         {/* IMAGE CONTAINER */}
                         <div className="h-full w-full relative">
+                            <Link href={slide.url}>
                             <Image
                                 src={slide.img}
                                 alt=""
@@ -62,6 +64,7 @@ const Slider = () => {
                                 sizes="100%"
                                 className="object-cover"
                             />
+                            </Link>
                         </div>
                     </div>
                 ))}

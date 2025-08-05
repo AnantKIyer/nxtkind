@@ -4,10 +4,10 @@ import { LogoTicker } from './LogoTicker';
 import Link from 'next/link';
 
 const blends = [
-    { flavor: 'VANILLA', color: 'bg-green-500', image: '/vanilla-green.png', url:'/vanilla-coffee-flavour' },
-    { flavor: 'CHOCOLATE', color: 'bg-orange-500', image: '/chocolate-orange.png', url:'/chocolate-flavour' },
-    { flavor: 'HYPERBEAN', color: 'bg-red-600', image: '/hyperbean-red.png', url:'/hyperbean-red-flavour' },
-    { flavor: 'HAZLENUT', color: 'bg-cyan-500', image: '/vanilla-blue.png', url:'/hazlenut-flavour' },
+    { flavor: 'VANILLA', color: 'text-green-500', image: '/nxtProduct_unflavoured.png', url:'/vanilla-coffee-flavour' },
+    { flavor: 'CHOCOLATE', color: 'text-orange-500', image: '/nxtProduct_chocolate.png', url:'/chocolate-flavour' },
+    { flavor: 'HYPERBEAN', color: 'text-red-600', image: '/nxtProduct_vanilla.png', url:'/hyperbean-red-flavour' },
+    { flavor: 'HAZLENUT', color: 'text-cyan-500', image: '/nxtProduct_coffee.png', url:'/hazlenut-flavour' },
 ];
 
 export default function BlendShowcase() {
@@ -23,9 +23,9 @@ export default function BlendShowcase() {
                     <div className="flex items-center justify-center mt-10">
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 max-w-6xl mx-auto w-full">
                             {blends.map((blend, index) => (
-                                <div key={index} className={` flex flex-col items-center justify-center ${blend.color} rounded-2xl shadow-lg py-6 border border-gray-100 hover:shadow-xl transition h-full`}>
+                                <div key={index} className={` flex flex-col items-center justify-center bg-white rounded-2xl shadow-lg py-6 border border-gray-100 hover:shadow-xl transition h-full`}>
                                     <Link href={blend.url} className="flex flex-col items-center justify-center h-full w-full">
-                                        <p className='tracking-wide text-center text-white font-bold text-lg mb-4'>{blend.flavor}</p>
+                                        <p className={`tracking-wide text-center  font-bold ${blend.color} text-lg mb-4`}>{blend.flavor}</p>
                                         <div className="w-32 h-32 flex items-center justify-center mb-4">
                                             <Image 
                                                 src={blend.image} 
