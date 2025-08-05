@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Review {
@@ -17,6 +17,14 @@ interface ReviewsCarouselProps {
 export default function ReviewsCarousel({ reviews }: ReviewsCarouselProps) {
   const [current, setCurrent] = useState(0);
 
+  // Auto-rotate every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrent((c) => (c + 1) % reviews.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [reviews.length]);
+
   const prev = () => setCurrent((c) => (c - 1 + reviews.length) % reviews.length);
   const next = () => setCurrent((c) => (c + 1) % reviews.length);
 
@@ -32,78 +40,86 @@ export default function ReviewsCarousel({ reviews }: ReviewsCarouselProps) {
         SIPS OF WELLNESS, SHARED BY YOU.
       </h2>
       <div className="relative flex items-center justify-center w-full max-w-3xl min-h-[320px]">
-        {/* Left side image (partially visible, clickable) */}
-        {reviews.length > 1 && (
-          <motion.button
-            className="hidden md:block absolute left-0 z-10 focus:outline-none"
-            onClick={prev}
-            aria-label="Previous Review"
-            whileTap={{ scale: 0.95 }}
-          >
-            <motion.img
-              src={reviews[getIndex(-1)].image}
-              alt=""
-              className="h-40 w-40 object-cover rounded-xl shadow-lg opacity-70 translate-x-[-30%] grayscale"
-              initial={{ scale: 0.85, opacity: 0.5 }}
-              animate={{ scale: 0.92, opacity: 0.7 }}
-              exit={{ scale: 0.8, opacity: 0.3 }}
-              draggable={false}
-            />
-          </motion.button>
-        )}
-
-        {/* Center review */}
-        <AnimatePresence initial={false} mode="wait">
-          <motion.div
-            key={current}
-            className="relative bg-white border rounded-xl shadow-md flex items-center px-4 md:px-10 py-8 w-full z-20"
-            initial={{ opacity: 0, x: 80 }}
-            animate={{ opacity: 1, x: 0, scale: 1.04, zIndex: 2 }}
-            exit={{ opacity: 0, x: -80 }}
-            transition={{ type: 'spring', duration: 0.5 }}
-          >
-            <motion.img
-              src={reviews[current].image}
-              alt=""
-              className="h-40 w-40 min-w-[10rem] object-cover rounded-xl mr-6 shadow-md"
-              initial={{ scale: 0.95, opacity: 0.8 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.35 }}
-              draggable={false}
-            />
+        {/* Fixed border container */}
+        <div className="relative bg-white border rounded-xl shadow-md flex items-center px-4 md:px-10 py-8 w-full z-10 overflow-hidden min-h-[256px]">
+          {/* AnimatePresence for center review */}
+          <AnimatePresence initial={false} mode="wait">
             <motion.div
-              className="flex flex-col justify-between h-full flex-1 min-w-0"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, delay: 0.15 }}
+              key={current}
+              className="flex items-center w-full"
+              initial={{ opacity: 0, x: 80 }}
+              animate={{ opacity: 1, x: 0, scale: 1.04, zIndex: 2 }}
+              exit={{ opacity: 0, x: -80 }}
+              transition={{ type: 'spring', duration: 0.5 }}
+              style={{ width: '100%' }}
             >
-              <h3 className="font-bold text-lg md:text-xl mb-2 uppercase">{reviews[current].heading}</h3>
-              <blockquote className="text-gray-700 text-base md:text-lg mb-6">{`“${reviews[current].quote}”`}</blockquote>
-              <div className="text-right font-medium text-gray-700">{`— ${reviews[current].author}`}</div>
+              <motion.img
+                src={reviews[current].image}
+                alt=""
+                className="h-40 w-40 min-w-[10rem] object-cover rounded-xl mr-6 shadow-md"
+                initial={{ scale: 0.95, opacity: 0.8 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                draggable={false}
+              />
+              <motion.div
+                className="flex flex-col justify-between h-full flex-1 min-w-0"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5, delay: 0.15 }}
+              >
+                <h3 className="font-bold text-lg md:text-xl mb-2 uppercase">{reviews[current].heading}</h3>
+                <blockquote className="text-gray-700 text-base md:text-lg mb-6">{`“${reviews[current].quote}”`}</blockquote>
+                <div className="text-right font-medium text-gray-700">{`— ${reviews[current].author}`}</div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        </AnimatePresence>
+          </AnimatePresence>
 
-        {/* Right side image (partially visible, clickable) */}
-        {reviews.length > 1 && (
-          <motion.button
-            className="hidden md:block absolute right-0 z-10 focus:outline-none"
-            onClick={next}
-            aria-label="Next Review"
-            whileTap={{ scale: 0.95 }}
-          >
-            <motion.img
-              src={reviews[getIndex(1)].image}
-              alt=""
-              className="h-40 w-40 object-cover rounded-xl shadow-lg opacity-70 translate-x-[30%] grayscale"
-              initial={{ scale: 0.85, opacity: 0.5 }}
-              animate={{ scale: 0.92, opacity: 0.7 }}
-              exit={{ scale: 0.8, opacity: 0.3 }}
-              draggable={false}
-            />
-          </motion.button>
-        )}
+          {/* Left and right images, behind border, partially visible */}
+          {reviews.length > 1 && (
+            <>
+              <motion.button
+                className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-0 focus:outline-none"
+                onClick={prev}
+                aria-label="Previous Review"
+                whileTap={{ scale: 0.95 }}
+                style={{ pointerEvents: 'auto', background: 'transparent', border: 'none', padding: 0 }}
+              >
+                <motion.img
+                  src={reviews[getIndex(-1)].image}
+                  alt=""
+                  className="h-32 w-32 object-cover rounded-xl shadow-lg opacity-40 grayscale border-4 border-white pointer-events-none"
+                  initial={{ scale: 0.85, opacity: 0.3 }}
+                  animate={{ scale: 0.92, opacity: 0.4 }}
+                  exit={{ scale: 0.8, opacity: 0.2 }}
+                  transition={{ duration: 0.5 }}
+                  draggable={false}
+                  style={{ zIndex: 0 }}
+                />
+              </motion.button>
+              <motion.button
+                className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-0 focus:outline-none"
+                onClick={next}
+                aria-label="Next Review"
+                whileTap={{ scale: 0.95 }}
+                style={{ pointerEvents: 'auto', background: 'transparent', border: 'none', padding: 0 }}
+              >
+                <motion.img
+                  src={reviews[getIndex(1)].image}
+                  alt=""
+                  className="h-32 w-32 object-cover rounded-xl shadow-lg opacity-40 grayscale border-4 border-white pointer-events-none"
+                  initial={{ scale: 0.85, opacity: 0.3 }}
+                  animate={{ scale: 0.92, opacity: 0.4 }}
+                  exit={{ scale: 0.8, opacity: 0.2 }}
+                  transition={{ duration: 0.5 }}
+                  draggable={false}
+                  style={{ zIndex: 0 }}
+                />
+              </motion.button>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Mobile navigation */}

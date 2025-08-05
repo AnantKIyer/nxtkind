@@ -74,20 +74,11 @@ const ProductList = async ({
                             alt=""
                             fill
                             sizes="25vw"
-                            className="absolute object-cover rounded-md z-10 hover:opacity-0 transition-opacity easy duration-500"
+                            className="absolute object-cover rounded-md z-10 transition-transform duration-500 ease-in-out hover:scale-110"
                         />
-                        {product.media?.items && (
-                            <Image
-                                src={product.media?.items[1]?.image?.url || "/product.png"}
-                                alt=""
-                                fill
-                                sizes="25vw"
-                                className="absolute object-cover rounded-md"
-                            />
-                        )}
                     </div>
                     <div className="flex justify-between">
-                        <span className="font-medium">{product.name}</span>
+                        <span className="font-bold text-xl">{product.name}</span>
                         <span className="font-semibold"> ₹{product.priceData?.price}</span>
                     </div>
                     {product.additionalInfoSections && (
@@ -102,7 +93,7 @@ const ProductList = async ({
                             }}
                         ></div>
                     )}
-                    <button className="rounded-2xl ring-1 ring-lama text-lama w-max py-2 px-4 text-xs hover:bg-[#68D335] hover:text-white">
+                    <button className=" rounded-lg w-full ring-2 py-2 px-4 text-md hover:bg-[#475A47] hover:text-white">
                         Add to Cart
                     </button>
                 </Link>

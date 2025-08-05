@@ -78,8 +78,8 @@ export default function IngredientsSection() {
           </div>
         </div>
       )}
-      <div className="container mx-auto px-4">
-        <div className="flex flex-wrap justify-center gap-[42px]">
+      <div className="container mx-auto px-3">
+        <div className="flex flex-wrap justify-center gap-[38px]">
           {ingredients.map((item) => (
             <div
               key={item.name}

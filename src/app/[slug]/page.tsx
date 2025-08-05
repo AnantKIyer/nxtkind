@@ -1,15 +1,8 @@
 import Add from "@/components/Add";
 import CustomizeProducts from "@/components/CustomizeProducts";
 import ProductImages from "@/components/ProductImages";
-// import Reviews from "@/components/Reviews";
 import { wixClientServer } from "@/lib/wixClientServer";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
-
-interface InfoSection {
-    title?: string;
-    description?: string;
-}
 
 type tParams = Promise<{ slug: string }>;
 
@@ -27,6 +20,7 @@ const SinglePage = async ({ params }: { params: tParams }) => {
   }
 
   const product = products.items[0];
+  const [productFirstName = '', productLastName = ''] = product.name ? product.name.split(' ', 2) : [];
 
   return (
     <div className="px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 relative flex flex-col lg:flex-row gap-16 py-24">
@@ -36,17 +30,17 @@ const SinglePage = async ({ params }: { params: tParams }) => {
       </div>
       {/* TEXTS */}
       <div className="w-full lg:w-1/2 flex flex-col gap-6">
-        <h1 className="text-4xl font-medium">{product.name}</h1>
-        <p className="text-gray-500">{product.description}</p>
+        <h1 className="text-xl text-end font-medium uppercase tracking-wider">{productFirstName}</h1>
+        <h1 className="text-7xl text-end font-bold text-[#68D335] uppercase tracking-wider">{productLastName}</h1>
         <div className="h-[2px] bg-gray-100" />
         {product.priceData?.price === product.priceData?.discountedPrice ? (
           <h2 className="font-medium text-2xl">₹{product.priceData?.price}</h2>
         ) : (
-          <div className="flex items-center gap-4">
-            <h3 className="text-xl text-gray-500 line-through">
+          <div className="flex w-full gap-4">
+            <h3 className="text-xl text-gray-500 text-end line-through">
             ₹{product.priceData?.price}
             </h3>
-            <h2 className="font-medium text-2xl">
+            <h2 className="font-medium text-end text-2xl">
             ₹{product.priceData?.discountedPrice}
             </h2>
           </div>
@@ -65,6 +59,7 @@ const SinglePage = async ({ params }: { params: tParams }) => {
             stockNumber={product.stock?.quantity || 0}
           />
         )}
+        {/*
         <div className="h-[2px] bg-gray-100" />
         {product.additionalInfoSections?.map((section: InfoSection) => (
           <div className="text-sm" key={section.title}>
@@ -72,12 +67,7 @@ const SinglePage = async ({ params }: { params: tParams }) => {
             <p>{section.description}</p>
           </div>
         ))}
-        <div className="h-[2px] bg-gray-100" />
-        {/* REVIEWS */}
-        <h1 className="text-2xl">User Reviews</h1>
-        <Suspense fallback="Loading...">
-          {/* <Reviews productId={product._id!} /> */}
-        </Suspense>
+        */}
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const slides = [
@@ -9,7 +8,7 @@ const slides = [
         id: 1,
         title: "Meal in one",
         description: "Sale! Up to 50% off!",
-        img: "https://images.pexels.com/photos/12050010/pexels-photo-12050010.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        img: "/nxtBanner_01.jpg",
         url: "/",
         bg: "bg-gradient-to-r from-yellow-50 to-pink-50",
     },
@@ -17,7 +16,7 @@ const slides = [
         id: 2,
         title: "Fulfillment in a bottle",
         description: "Sale! Up to 50% off!",
-        img: "https://images.pexels.com/photos/7656394/pexels-photo-7656394.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        img: "/nxtBanner_02.jpg",
         url: "/",
         bg: "bg-gradient-to-r from-pink-50 to-blue-50",
     },
@@ -25,7 +24,7 @@ const slides = [
         id: 3,
         title: "Exciting flavour Collections",
         description: "Sale! Up to 50% off!",
-        img: "https://images.pexels.com/photos/2705644/pexels-photo-2705644.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        img: "/nxtBanner_03.jpg",
         url: "/",
         bg: "bg-gradient-to-r from-blue-50 to-yellow-50",
     },
@@ -53,22 +52,9 @@ const Slider = () => {
                         className={`${slide.bg} w-screen h-full flex flex-col gap-16 xl:flex-row`}
                         key={slide.id}
                     >
-                       {/*TEXT CONTAINER */}
-                        <div className="h-1/2 xl:w-1/2 xl:h-full flex flex-col items-center justify-center gap-8 2xl:gap-12 text-center">
-                            <h2 className="text-xl lg:text-3xl 2xl:text-5xl">
-                                {slide.description}
-                            </h2>
-                            <h1 className="text-5xl lg:text-6xl 2xl:text-8xl font-semibold">
-                                {slide.title}
-                            </h1>
-                            <Link href={slide.url}>
-                                <button className="rounded-md bg-black text-white py-3 px-4 ">
-                                    SHOP NOW
-                                </button>
-                            </Link>
-                        </div>
+                       
                         {/* IMAGE CONTAINER */}
-                        <div className="h-1/2 xl:w-1/2 xl:h-full relative">
+                        <div className="h-full w-full relative">
                             <Image
                                 src={slide.img}
                                 alt=""
