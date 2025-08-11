@@ -99,7 +99,7 @@ export default function SciencePage() {
             Experience the Science of Nutrition
           </h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Join thousands who have transformed their health with NXTKIND's scientifically formulated meal replacement system
+            Join thousands who have transformed their health with NXTKIND&apos;s scientifically formulated meal replacement system
           </p>
           <button className="px-8 py-4 bg-white text-green-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors duration-300 text-lg">
             Try NXTKIND Today
