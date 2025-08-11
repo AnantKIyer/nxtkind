@@ -4,6 +4,8 @@ import "./globals.css";
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import {WixClientContextProvider} from "@/context/WixContext";
+import {NotificationProvider} from "@/context/NotificationContext";
+import NotificationBanner from "@/components/NotificationBanner";
 
 const poppins = Poppins({
   weight: ['400', '500', '600', '700'],
@@ -27,9 +29,12 @@ export default function RootLayout({
         className={`${poppins.variable} font-sans antialiased`}
       >
       <WixClientContextProvider>
-      <Navbar/>
-        {children}
-      <Footer/>
+        <NotificationProvider>
+          <Navbar/>
+          {children}
+          <Footer/>
+          <NotificationBanner />
+        </NotificationProvider>
       </WixClientContextProvider>
       </body>
     </html>

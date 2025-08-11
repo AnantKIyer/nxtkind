@@ -2,6 +2,7 @@
 
 import { useCartStore } from "@/hooks/useCartStore";
 import { useWixClient } from "@/hooks/useWixClientContext";
+import { useNotification } from "@/context/NotificationContext";
 import { useState } from "react";
 
 const Add = ({
@@ -29,7 +30,7 @@ const Add = ({
     };
 
     const wixClient = useWixClient();
-
+    const { addNotification } = useNotification();
     const { addItem } = useCartStore();
 
     return (
@@ -67,7 +68,14 @@ const Add = ({
                 
             </div>
             <button
-                    onClick={() => addItem(wixClient, productId, variantId, quantity)}
+                    onClick={async () => {
+                        try {
+                            await addItem(wixClient, productId, variantId, quantity);
+                            addNotification("Product added to cart successfully!");
+                        } catch {
+                            addNotification("Failed to add product to cart", "error");
+                        }
+                    }}
                     className="w-full rounded-xl ring-1 text-[#68D335] font-bold text-xl py-4 px-4 hover:bg-[#68D335] hover:text-white disabled:cursor-not-allowed disabled:bg-pink-200 disabled:ring-0 disabled:text-white disabled:ring-none"
                 >
                     Add to Cart

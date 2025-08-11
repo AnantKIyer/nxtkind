@@ -7,9 +7,9 @@ import NavIcons from "@/components/NavIcons";
 
 const menuItems = [
     {label: 'Shop', href: '/list'},
-    {label: 'Science', href: '/'},
+    {label: 'Science', href: '/science'},
     {label: 'About', href: '/about'},
-    {label: 'Blog', href: '/'},
+    {label: 'Blog', href: '/blogs'},
 
 ]
 

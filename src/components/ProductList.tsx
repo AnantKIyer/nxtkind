@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import DOMPurify from "isomorphic-dompurify";
 import Pagination from "./Pagination";
+import ClientAddToCartButton from './ClientAddToCartButton';
 
 interface SearchParams {
     name?: string;
@@ -128,9 +129,11 @@ const ProductList = async ({
                             }}
                         ></div>
                     )}
-                    <button className=" rounded-lg w-full ring-2 py-2 px-4 text-md hover:bg-[#475A47] hover:text-white">
-                        Add to Cart
-                    </button>
+                    <ClientAddToCartButton 
+                        productId={product._id || ""}
+                        variantId={product.variants?.[0]?._id || "00000000-0000-0000-0000-000000000000"}
+                        stockNumber={product.variants?.[0]?.stock?.quantity || product.stock?.quantity || 0}
+                    />
                 </Link>
             ))}
             {(searchParams?.cat || searchParams?.name) && (
