@@ -3,13 +3,9 @@ import Link from "next/link";
 import { blogs } from "@/data/data";
 import { notFound } from "next/navigation";
 
-interface BlogPageProps {
-  params: {
-    slug: string;
-  };
-}
+type BlogPageParams = Promise<{ slug: string }>; 
 
-export default async function BlogPage({ params }: BlogPageProps) {
+export default async function BlogPage({ params }: { params: BlogPageParams }) {
   const resolvedParams = await params;
   
   if (!resolvedParams?.slug) {
