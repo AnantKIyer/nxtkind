@@ -46,8 +46,7 @@ Fats? Far from the villain they've been painted. Your brain is 60% fat—it lite
 The magic happens when these three sync up. A plate with balanced macros isn't just satisfying—it keeps blood sugar stable, cravings in line, and energy on tap. No extreme cuts, no crash diets—just the steady, smart burn that keeps you powered all day.
 
 So next time you eat, remember—it's not just about counting calories or cutting out food groups. Carbs, proteins, and fats each play a key role in keeping your body energized, your mind focused, and your health on track. They're not the enemy—they're essential tools. Instead of fighting them, learn how to use them. Because when your macros are in balance, you're not just fueling your day—you're giving your body what it needs to perform at its best. 
-When your macros are in sync, you're not just eating—you're elevating. 
-`
+When your macros are in sync, you're not just eating—you're elevating. `
     },
     {
         _id: 3, 
@@ -95,41 +94,9 @@ Replace mayo or cheese spreads with mashed avocado or nut butter on toast, sandw
 Cook with coconut milk or coconut cream in curries, stews, or desserts to get some natural saturated fat in moderation.
 Choose dark chocolate (70% or higher) for dessert—cocoa contains healthy fats along with antioxidants.
 
-The shift from "fat-free" to "fat-friendly" diets proves that not all fats are bad. It's time to retire the outdated myth that fat is the bad guy. In truth, fat is one of the most powerful allies your body has—when chosen wisely. Good fats don't just belong in your meals—they belong in your lifestyle.
-
-
-`
+The shift from "fat-free" to "fat-friendly" diets proves that not all fats are bad. It's time to retire the outdated myth that fat is the bad guy. In truth, fat is one of the most powerful allies your body has—when chosen wisely. Good fats don't just belong in your meals—they belong in your lifestyle.`
     },
-    {
-        _id: 4,
-        slug: 'energy-boosting-smoothies',
-        title: '10 Energy-Boosting Smoothie Recipes for Busy Professionals',
-        excerpt: 'Quick and nutritious smoothie recipes that will keep you energized throughout your busy workday.',
-        image: "/green-tea.jpg",
-        date: "2024-01-05",
-        readTime: "6 min read",
-        content: `In today's fast-paced world, maintaining energy levels throughout the day can be challenging. These smoothie recipes are designed to provide sustained energy without the crash that comes from sugary drinks or caffeine overload. Each recipe combines the perfect balance of complex carbohydrates, healthy fats, and protein to keep you fueled and focused.`
-    },
-    {
-        _id: 5,
-        slug: 'mindful-eating-practices',
-        title: 'Mindful Eating: Transform Your Relationship with Food',
-        excerpt: 'Learn practical techniques to develop a healthier and more conscious relationship with your daily nutrition.',
-        image: "/stevia.jpg",
-        date: "2024-01-03",
-        readTime: "8 min read",
-        content: `Mindful eating is more than just a trend—it's a fundamental shift in how we approach food. This practice helps you develop a deeper connection with your body's needs and creates a more sustainable relationship with nutrition.`
-    },
-    {
-        _id: 6,
-        slug: 'protein-powder-comparison',
-        title: 'Plant vs. Animal Protein: A Comprehensive Comparison',
-        excerpt: 'An in-depth analysis of plant-based and animal protein sources, their benefits, and nutritional profiles.',
-        image: "/comparison.png",
-        date: "2024-01-01",
-        readTime: "10 min read",
-        content: `The debate between plant and animal protein sources continues to evolve as research reveals new insights into their respective benefits and drawbacks. Understanding these differences can help you make informed decisions about your protein intake.`
-    }
+    
 ]
 
 

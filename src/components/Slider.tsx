@@ -10,7 +10,7 @@ const slides = [
         title: "Meal in one",
         description: "Sale! Up to 50% off!",
         img: "/nxtBanner_01.jpg",
-        url: "/hyperbean-red-flavour",
+        url: "/blogs/the-efficiency-paradox",
         bg: "bg-gradient-to-r from-yellow-50 to-pink-50",
     },
     {
@@ -26,7 +26,7 @@ const slides = [
         title: "Exciting flavour Collections",
         description: "Sale! Up to 50% off!",
         img: "/nxtBanner_03.jpg",
-        url: "/",
+        url: "/blogs/tiny-but-lit",
         bg: "bg-gradient-to-r from-blue-50 to-yellow-50",
     },
 ];

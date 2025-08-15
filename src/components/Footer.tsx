@@ -1,5 +1,6 @@
 import { FaInstagram, FaFacebookF } from 'react-icons/fa';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const Footer = () => {
     return (
@@ -31,7 +32,7 @@ const Footer = () => {
                     <div>
                         <h4 className="font-medium text-gray-700 mb-2">Customer Support</h4>
                         <ul className="space-y-1">
-                            <li>FAQ</li>
+                            <li><Link href="/faq" className="">FAQ</Link></li>
                             <li>Shipping & Returns</li>
                             <li>Privacy Policy</li>
                             <li>Terms & Conditions</li>
