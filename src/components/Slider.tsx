@@ -7,26 +7,26 @@ import { useEffect, useState } from "react";
 const slides = [
     {
         id: 1,
-        title: "Meal in one",
-        description: "Sale! Up to 50% off!",
-        img: "/nxtBanner_01.jpg",
+        title: "The Efficiency Paradox",
+        description: "Why Optimizing Your Nutrition Is the New Luxury",
+        img: "/the-efficiency-paradox.jpeg",
         url: "/blogs/the-efficiency-paradox",
         bg: "bg-gradient-to-r from-yellow-50 to-pink-50",
     },
     {
         id: 2,
-        title: "Fulfillment in a bottle",
-        description: "Sale! Up to 50% off!",
-        img: "/nxtBanner_02.jpg",
-        url: "/vanilla-coffee-flavour",
+        title: "Tiny but Lit!",
+        description: "How Macronutrients Secretly Run the Whole Show",
+        img: "/macro-nutrients.jpg",
+        url: "/blogs/tiny-but-lit",
         bg: "bg-gradient-to-r from-pink-50 to-blue-50",
     },
     {
         id: 3,
-        title: "Exciting flavour Collections",
-        description: "Sale! Up to 50% off!",
-        img: "/nxtBanner_03.jpg",
-        url: "/blogs/tiny-but-lit",
+        title: "Fats don't make you fat",
+        description: "Discover why healthy fats are essential for brain function",
+        img: "/fats-not-fat.jpg",
+        url: "/blogs/fat-that-dont-make-you-fat",
         bg: "bg-gradient-to-r from-blue-50 to-yellow-50",
     },
 ];
@@ -43,29 +43,29 @@ const Slider = () => {
     }, []);
 
     return (
-        <div className="h-[90vh] overflow-hidden relative">
+        <div className="h-screen overflow-hidden relative">
             <div
-                className="w-max h-full mt-0 flex transition-all ease-in-out duration-1000"
-                style={{ transform: `translateX(-${current * 100}vw)` }}
+                className="flex h-full transition-all ease-in-out duration-1000"
+                style={{ 
+                    transform: `translateX(-${current * 100}vw)`,
+                    width: `${slides.length * 100}vw`
+                }}
             >
-                {slides.map((slide) => (
+                {slides.map((slide, index) => (
                     <div
-                        className={`${slide.bg} w-screen h-full flex flex-col gap-16 xl:flex-row`}
+                        className="w-screen h-full relative flex-shrink-0"
                         key={slide.id}
                     >
-                       
-                        {/* IMAGE CONTAINER */}
-                        <div className="h-full w-full relative">
-                            <Link href={slide.url} className="block h-full w-full relative">
-                            <Image
-                                src={slide.img}
-                                alt=""
-                                fill
-                                sizes="100%"
-                                className="object-cover"
-                            />
-                            </Link>
-                        </div>
+                        <Link href={slide.url} className="block h-full w-full relative">
+                        <Image
+                            src={slide.img}
+                            alt={slide.title}
+                            fill
+                            sizes="100vw"
+                            className="object-cover"
+                            priority={index === 0}
+                        />
+                        </Link>
                     </div>
                 ))}
             </div>

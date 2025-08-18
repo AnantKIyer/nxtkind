@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { ArrowRight, CheckCircle2 } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 
 const ComparisonTable: React.FC = () => {
     const comparisonData = [
@@ -103,16 +103,6 @@ const ComparisonTable: React.FC = () => {
                       </div>
                     ))}
                   </div>
-                </div>
-
-                {/* CTA Button */}
-                <div className="mt-12 flex justify-center">
-                    <button className="flex items-center bg-white border border-gray-300 rounded-full px-6 py-2 text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
-                        <span className="mr-2 font-medium">Benefits</span>
-                        <div className="bg-gray-800 rounded-full p-1">
-                            <ArrowRight size={14} className="text-white" />
-                        </div>
-                    </button>
                 </div>
             </div>
         </section>

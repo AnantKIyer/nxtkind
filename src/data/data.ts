@@ -4,7 +4,7 @@ export const blogs = [
         slug: "the-efficiency-paradox",
         title: 'The Efficiency Paradox: Why Optimizing Your Nutrition Is the New Luxury',
         excerpt: 'Discover how extreme diet optimization can backfire and why true nutritional luxury lies in intuitive eating and sustainable habits.',
-        image: "/pea-protein.jpg",
+        image: "/the-efficiency-paradox.jpeg",
         date: "2024-01-15",
         readTime: "8 min read",
         content: `Steve Jobs pursued the ultimate "efficient" diet—all fruit, zero fat—only for research to later suggest that this extreme regime may have fueled the pancreatic cancer that killed him at 56. Hugh Jackman force-fed himself 8,000 calories of chicken and rice daily to become Wolverine, until dermatologists linked the relentless protein overload to his recurring skin cancers. Christian Bale starved down to 121 lbs for The Machinist—a 'perfectly efficient' fat-loss strategy that left him with lasting thyroid issues.
@@ -32,7 +32,7 @@ The paradox? It turns out, the most efficient system is one you actually enjoy. 
         slug: 'tiny-but-lit',
         title: 'Tiny But Lit: How Macronutrients Secretly Run the Whole Show',
         excerpt: 'Learn why carbs, protein, and fat are more than just numbers—they\'re the hidden architects of your energy, mood, and performance.',
-        image: "/brown-rice.jpg",
+        image: "/macro-nutrients.jpg",
         date: "2024-01-10",
         readTime: "6 min read",
         content:`Still counting calories? You're missing the bigger picture.Behind the scenes, a few key nutrients quietly do the heavy lifting. They might be small, but they play a big role - the macronutrients. Carbs, protein, and fat may sound basic, but these three powerhouses quietly dictate everything from your mood and metabolism to muscle growth and brain clarity. Ignore them, and your body pays the price. Understand them, and you unlock real control over your energy, performance, and long-term health. 
@@ -53,7 +53,7 @@ When your macros are in sync, you're not just eating—you're elevating. `
         slug: 'fat-that-dont-make-you-fat',
         title: 'Fats that don\'t make you fat',
         excerpt: 'Discover why healthy fats are essential for brain function, hormone balance, and overall health—and how to incorporate them wisely.',
-        image: "/coconut.jpg",
+        image: "/fats-not-fat.jpg",
         date: "2024-01-08",
         readTime: "10 min read",
         content: `In a country where croissants count as breakfast and they eat butter, cheese, and cream like it's a food group. Yet, heart health is thriving in France. How? For years, fats have been demonized as the enemy of a healthy diet, blamed for weight gain, heart disease, and other health problems. But the truth we know today is that not all fats are created equal—and cutting out the good ones does more harm than good. Your brain, hormones, and even your skin are practically begging for the right kinds of fat to function.

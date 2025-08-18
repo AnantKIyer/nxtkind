@@ -15,7 +15,7 @@ const menuItems = [
 
 export default function Navbar() {
     return (
-        <div className='h-20 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 sticky bg-transparent top-0 backdrop-blur-sm z-20'>
+        <div className='h-20 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 fixed bg-white/30 top-0 backdrop-blur-md z-50 w-full'>
                 {/*MOBILE*/}
             <div className='h-20 flex items-center justify-between md:hidden'>
                 <Link href='/' className='flex items-center'>
