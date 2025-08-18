@@ -1,8 +1,7 @@
-import UpdateButton from "@/components/UpdateButton";
-import { updateUser } from "@/lib/actions";
 import { wixClientServer } from "@/lib/wixClientServer";
 import { members } from "@wix/members";
-import Link from "next/link";
+import { updateUser } from "@/lib/actions";
+import Image from "next/image";
 import { format } from "timeago.js";
 
 export const dynamic = 'force-dynamic';
@@ -22,33 +21,71 @@ const ProfilePage = async () => {
     filter: { "buyerInfo.contactId": { $eq: user.member?.contactId } },
   });
 
+  // Get profile image source
+  const getProfileImageSrc = () => {
+    const profile = user.member?.profile as { picture?: string } | undefined;
+    if (profile?.picture) {
+      return profile.picture;
+    }
+    return "/woman.png";
+  };
+
+  // Get user display name
+  const getUserDisplayName = () => {
+    if (user.member?.contact?.firstName && user.member?.contact?.lastName) {
+      return `${user.member.contact.firstName} ${user.member.contact.lastName}`;
+    }
+    if (user.member?.contact?.firstName) {
+      return user.member.contact.firstName;
+    }
+    if (user.member?.loginEmail) {
+      return user.member.loginEmail.split('@')[0];
+    }
+    return "User";
+  };
+
   return (
     <div className="flex flex-col md:flex-row gap-24 md:h-[calc(100vh-180px)] items-center px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
       <div className="w-full md:w-1/2">
-        <h1 className="text-2xl">Profile</h1>
+        <div className="flex items-center gap-6 mb-8">
+          <Image
+            src={getProfileImageSrc()}
+            alt="Profile"
+            width={80}
+            height={80}
+            className="rounded-full object-cover"
+          />
+          <div>
+            <h1 className="text-2xl font-semibold">{getUserDisplayName()}</h1>
+            <p className="text-gray-600">{user.member?.loginEmail}</p>
+            {getProfileImageSrc() !== "/woman.png" && (
+              <p className="text-sm text-green-600">✓ Google Account</p>
+            )}
+          </div>
+        </div>
+        
         <form action={updateUser} className="mt-8 flex flex-col gap-4">
           <div className="flex flex-row gap-5">
-
-          <div className="flex flex-col">
-          <label className="text-sm text-gray-700">First Name</label>
-          <input
-            type="text"
-            name="firstName"
-            placeholder={user.member?.contact?.firstName || "John"}
-            className="ring-1 ring-gray-300 rounded-md p-2 max-w-96"
-            />
+            <div className="flex flex-col">
+              <label className="text-sm text-gray-700">First Name</label>
+              <input
+                type="text"
+                name="firstName"
+                placeholder={user.member?.contact?.firstName || "John"}
+                className="ring-1 ring-gray-300 rounded-md p-2 max-w-96"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label className="text-sm text-gray-700">Surname</label>
+              <input
+                type="text"
+                name="lastName"
+                placeholder={user.member?.contact?.lastName || "Doe"}
+                className="ring-1 ring-gray-300 rounded-md p-2 max-w-96"
+              />
+            </div>
           </div>
-          <div className="flex flex-col">
-
-          <label className="text-sm text-gray-700">Surname</label>
-          <input
-            type="text"
-            name="lastName"
-            placeholder={user.member?.contact?.lastName || "Doe"}
-            className="ring-1 ring-gray-300 rounded-md p-2 max-w-96"
-            />
-            </div>
-            </div>
+          
           <label className="text-sm text-gray-700">Phone</label>
           <input
             type="text"
@@ -60,35 +97,56 @@ const ProfilePage = async () => {
             }
             className="ring-1 ring-gray-300 rounded-md p-2 max-w-96"
           />
+          
           <label className="text-sm text-gray-700">E-mail</label>
           <input
             type="email"
             name="email"
-            placeholder={user.member?.loginEmail || "john@gmail.com"}
+            placeholder={user.member?.loginEmail || "john@example.com"}
             className="ring-1 ring-gray-300 rounded-md p-2 max-w-96"
           />
-          <UpdateButton />
+
+          <input type="hidden" name="id" value={user.member._id || ""} />
+
+          <button
+            type="submit"
+            className="bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors max-w-96"
+          >
+            Update Profile
+          </button>
         </form>
       </div>
+
       <div className="w-full md:w-1/2">
-        <h1 className="text-2xl">Orders</h1>
-        <div className="mt-12 flex flex-col">
+        <h2 className="text-xl font-semibold mb-6">Order History</h2>
+        <div className="space-y-4">
           {orderRes.orders?.map((order) => (
-            <Link
-              href={`/orders/${order._id}`}
-              key={order._id}
-              className="flex justify-between px-2 py-6 rounded-md hover:bg-green-50 even:bg-slate-100"
-            >
-              <span className="w-1/4">{order._id?.substring(0, 10)}...</span>
-              <span className="w-1/4">
-                ₹{order.priceSummary?.subtotal?.amount}
-              </span>
-              {order._createdDate && (
-                <span className="w-1/4">{format(order._createdDate)}</span>
-              )}
-              <span className="w-1/4">{order.status}</span>
-            </Link>
+            <div key={order._id} className="border rounded-lg p-4">
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <p className="font-medium">Order #{order.number}</p>
+                  <p className="text-sm text-gray-600">
+                    {format(order._createdDate || new Date())}
+                  </p>
+                </div>
+                <span className={`px-2 py-1 rounded-full text-xs ${
+                  String(order.status).includes('FULFILLED') 
+                    ? 'bg-green-100 text-green-800' 
+                    : String(order.status).includes('PENDING') 
+                    ? 'bg-yellow-100 text-yellow-800'
+                    : 'bg-gray-100 text-gray-800'
+                }`}>
+                  {order.status || 'UNKNOWN'}
+                </span>
+              </div>
+              <p className="text-sm text-gray-600">
+                Total: ₹{order.priceSummary?.total?.amount}
+              </p>
+            </div>
           ))}
+          {(!orderRes.orders || orderRes.orders.length === 0) && (
+            <p className="text-gray-500 text-center py-8">No orders yet</p>
+          )}
         </div>
       </div>
     </div>

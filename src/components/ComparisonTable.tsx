@@ -16,7 +16,7 @@ const ComparisonTable: React.FC = () => {
     ];
 
     return (
-        <section className="bg-white px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 relative overflow-hidden -mt-48">
+        <section className="bg-white px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 relative overflow-hidden py-16">
             <div className="flex flex-col container mx-auto px-2 sm:px-4">
                 {/* Heading */}
                 <h2 className="text-3xl md:text-4xl font-extrabold mb-10 text-gray-900 tracking-wide flex items-center justify-center gap-2">

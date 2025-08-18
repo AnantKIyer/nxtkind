@@ -1,13 +1,21 @@
 "use client";
 
 import { WixClientContext } from "@/context/WixContext";
-
 import { useContext } from "react";
 
 export const useWixClient = () => {
-  const client = useContext(WixClientContext);
-  if (!client) {
+  const context = useContext(WixClientContext);
+  if (!context) {
     throw new Error("WixClientContext is not provided, ensure your provider is setup.");
   }
-  return client;
+  return context;
+};
+
+// Convenience hook for just the client
+export const useWixClientOnly = () => {
+  const context = useContext(WixClientContext);
+  if (!context) {
+    throw new Error("WixClientContext is not provided, ensure your provider is setup.");
+  }
+  return context.wixClient;
 };

@@ -1,34 +1,53 @@
 import { create } from "zustand";
-import { currentCart } from "@wix/ecom";
 import { WixClient } from "@/context/WixContext";
+import { currentCart } from "@wix/ecom";
 
 type CartState = {
-    cart: currentCart.Cart;
+    cart: currentCart.Cart | null;
     isLoading: boolean;
     counter: number;
     getCart: (wixClient: WixClient) => void;
-    addItem: (
-        wixClient: WixClient,
-        productId: string,
-        variantId: string,
-        quantity: number
-    ) => void;
+    addItem: (wixClient: WixClient, productId: string, variantId: string, quantity: number) => void;
     removeItem: (wixClient: WixClient, itemId: string) => void;
 };
 
 export const useCartStore = create<CartState>((set) => ({
-    cart: [],
+    cart: null,
     isLoading: true,
     counter: 0,
     getCart: async (wixClient) => {
         try {
+            // Check if user is logged in before trying to get cart
+            const isLoggedIn = wixClient.auth.loggedIn();
+            if (!isLoggedIn) {
+                set({
+                    cart: null,
+                    isLoading: false,
+                    counter: 0,
+                });
+                return;
+            }
+            
             const cart = await wixClient.currentCart.getCurrentCart();
             set({
-                cart: cart || [],
+                cart: cart || null,
                 isLoading: false,
                 counter: cart?.lineItems?.length ?? 0,
             });
         } catch (err) {
+            // Handle cart not found error gracefully
+            if (err && typeof err === 'object' && 'message' in err) {
+                const errorMessage = (err as { message: string }).message;
+                if (errorMessage.includes('OWNED_CART_NOT_FOUND') || errorMessage.includes('Cannot find cart by ownership')) {
+                    // User is not logged in or cart doesn't exist, set empty cart
+                    set({
+                        cart: null,
+                        isLoading: false,
+                        counter: 0,
+                    });
+                    return;
+                }
+            }
             set((prev) => ({ ...prev, isLoading: false }));
             console.log('Error ==>', err)
         }
@@ -47,23 +66,21 @@ export const useCartStore = create<CartState>((set) => ({
                 },
             ],
         });
-
-        set({
+        set((state) => ({
+            ...state,
             cart: response.cart,
             counter: response.cart?.lineItems?.length ?? 0,
             isLoading: false,
-        });
+        }));
     },
     removeItem: async (wixClient, itemId) => {
         set((state) => ({ ...state, isLoading: true }));
-        const response = await wixClient.currentCart.removeLineItemsFromCurrentCart(
-            [itemId]
-        );
-
-        set({
+        const response = await wixClient.currentCart.removeLineItemsFromCurrentCart([itemId]);
+        set((state) => ({
+            ...state,
             cart: response.cart,
             counter: response.cart?.lineItems?.length ?? 0,
             isLoading: false,
-        });
-    },
+        }));
+    }
 }));

@@ -1,34 +1,39 @@
 "use client";
 
 import Image from "next/image";
-import { useWixClient } from "@/hooks/useWixClientContext";
-import { LoginState } from "@wix/sdk";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useWixClient } from "@/hooks/useWixClientContext";
+import GoogleLoginButton from "@/components/GoogleLoginButton";
 
 enum MODE {
   LOGIN = "LOGIN",
-  REGISTER = "REGISTER",
   RESET_PASSWORD = "RESET_PASSWORD",
   CONFIRM_EMAIL = "CONFIRM_EMAIL",
 }
+
 export default function LoginPage() {
   const [mode, setMode] = useState(MODE.LOGIN);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [emailCode, setEmailCode] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  const router = useRouter();
+  const { wixClient, isLoggedIn, login } = useWixClient();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.replace("/");
+    }
+  }, [isLoggedIn, router]);
 
   const FormTitle =
     mode === MODE.LOGIN
       ? "Login"
-      : mode === MODE.REGISTER
-      ? "Register"
       : mode === MODE.RESET_PASSWORD
       ? "Reset Password"
       : mode === MODE.CONFIRM_EMAIL
@@ -38,61 +43,40 @@ export default function LoginPage() {
   const buttonTitle =
     mode === MODE.LOGIN
       ? "Login"
-      : mode === MODE.REGISTER
-      ? "Register"
       : mode === MODE.RESET_PASSWORD
       ? "Reset Password"
       : mode === MODE.CONFIRM_EMAIL
       ? "Confirm Email"
       : null;
 
-  const router = useRouter();
-
-  const wixClient = useWixClient();
-
-  const handleConfirmPassword = (password: string, confirmPassword: string) => {
-    return password === confirmPassword ? true : false;
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
     setError("");
 
     try {
       let response;
-      if (
-        (mode === MODE.REGISTER || mode === MODE.RESET_PASSWORD) &&
-        !handleConfirmPassword(password, confirmPassword)
-      ) {
-        setError("Passwords do not match");
-        console.log("Password don't match", password, confirmPassword);
-        return;
-      }
+      
       switch (mode) {
         case MODE.LOGIN:
-          response = await wixClient.auth.login({
-            email,
-            password,
-          });
-          break;
-        case MODE.REGISTER:
-          response = await wixClient.auth.register({
-            email,
-            password,
-            profile: {
-              firstName,
-              lastName,
-            },
-          });
-          break;
+          const loginResult = await login(email, password);
+          if (loginResult.success) {
+            setSuccess("Login successful! Redirecting...");
+            setEmail("");
+            setPassword("");
+            router.push("/");
+          } else {
+            setError(loginResult.error || "Login failed");
+          }
+          return;
         case MODE.RESET_PASSWORD:
           response = await wixClient.auth.sendPasswordResetEmail(
             email,
             window.location.href
           );
           setSuccess("Password reset email sent. Please check your e-mail.");
-          break;
+          setMode(MODE.LOGIN);
+          setTimeout(() => setSuccess(""), 4000);
+          return;
         case MODE.CONFIRM_EMAIL:
           response = await wixClient.auth.processVerification({
             verificationCode: emailCode,
@@ -102,206 +86,136 @@ export default function LoginPage() {
           break;
       }
 
-      switch (response?.loginState) {
-        case LoginState.SUCCESS:
-          setSuccess("Successful! You are being redirected.");
-          router.push("/");
-          break;
-        case LoginState.FAILURE:
-          if (
-            response.errorCode === "invalidEmail" ||
-            response.errorCode === "invalidPassword"
-          ) {
-            setError("Invalid email or password!");
-          } else if (response.errorCode === "emailAlreadyExists") {
-            setError("Email already exists!");
-          } else if (response.errorCode === "resetPassword") {
-            setError("You need to reset your password!");
-          } else {
-            setError("Something went wrong!");
-          }
-        default:
-          break;
+      if (response?.loginState === 'SUCCESS') {
+        setSuccess("Successful! You are being redirected.");
+        setEmail("");
+        setPassword("");
+        router.push("/");
+      } else {
+        setError("Something went wrong!");
       }
-    } catch (err) {
-      console.log(err);
-      setError("Error in Development");
-    } finally {
-      setIsLoading(false);
+    } catch {
+      setError("An error occurred. Please try again.");
     }
   };
 
   return (
     <section className="-mt-11 w-full bg-white">
       <div className="flex flex-col md:flex-row items-center justify-between px-6 md:px-16 py-16">
-        {/* Text Section */}
-        <div className="order-2 px-10 w-full md:w-3/4 text-center items-start md:text-left space-y-6">
-          <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
-            <h1 className="text-4xl w-full md:text-5xl font-bold tracking-tighter text-[#414143]">
+        {/* Left: Illustration */}
+        <div className="hidden order-1 w-full md:w-1/2 md:flex justify-center">
+          <Image
+            src="/nxt_vertical_banner.jpg"
+            alt="Nxtkind"
+            width={600}
+            height={700}
+            className="rounded-xl object-cover shadow-[var(--shadow-box)]"
+          />
+        </div>
+
+        {/* Right: Auth Card */}
+        <div className="order-2 w-full md:w-1/2 flex justify-center">
+          <form className="w-full max-w-md card p-8" onSubmit={handleSubmit}>
+            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-[#414143] mb-6">
               {FormTitle}
             </h1>
-            <br />
 
-            {mode === MODE.REGISTER ? (
-              <div className="flex flex-col md:flex-row gap-4">
-                <input
-                  type="text"
-                  placeholder="First Name"
-                  className="w-full mb-4 p-3 border rounded-lg"
-                  onChange={(e) => setFirstName(e.target.value)}
-                />
-                <input
-                  type="text"
-                  placeholder="Last Name"
-                  className="w-full mb-4 p-3 border rounded-lg"
-                  onChange={(e) => setLastName(e.target.value)}
-                />
-              </div>
-            ) : null}
+            {mode === MODE.LOGIN && (
+              <>
+                {/* Google Login Button */}
+                <div className="mb-6">
+                  <GoogleLoginButton />
+                </div>
 
-            <input
-              type="email"
-              name="email"
-              placeholder="someone@example.com"
-              className="w-full mb-4 p-3 border rounded-lg"
-              onChange={(e) => setEmail(e.target.value)}
-            />
+                {/* Divider */}
+                <div className="relative mb-6">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-300" />
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-white text-gray-500">Or continue with email</span>
+                  </div>
+                </div>
+              </>
+            )}
 
-            {mode === MODE.CONFIRM_EMAIL ? (
+            <div className="flex flex-col gap-4">
               <input
-                type="text"
-                name="emailCode"
-                placeholder="123456"
-                className="w-full mb-2 p-3 border rounded-lg"
-                onChange={(e) => setEmailCode(e.target.value)}
+                type="email"
+                name="email"
+                placeholder="someone@example.com"
+                className="w-full p-3 border rounded-lg"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoFocus
+                required
               />
-            ) : (
-              (mode === MODE.LOGIN || mode === MODE.REGISTER) && (
+
+              {mode === MODE.CONFIRM_EMAIL ? (
+                <input
+                  type="text"
+                  name="emailCode"
+                  placeholder="123456"
+                  className="w-full p-3 border rounded-lg"
+                  value={emailCode}
+                  onChange={(e) => setEmailCode(e.target.value)}
+                  required
+                />
+              ) : (
                 <input
                   type="password"
                   name="password"
                   placeholder="Password"
-                  className="w-full p-3 border rounded-md"
+                  className="w-full p-3 border rounded-lg"
+                  value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
-              )
-            )}
+              )}
 
-            {mode === MODE.REGISTER ? (
-              <input
-                type="password"
-                name="reset_password"
-                placeholder="Confirm Password"
-                className="w-full p-3 border rounded-md"
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            ) : null}
-
-            {mode === MODE.LOGIN && (
-              <div className="flex flex-row items-center justify-between">
-                <p
-                  className="text-sm -mb-5 cursor-pointer underline"
-                  onClick={() => setMode(MODE.REGISTER)}
-                >
-                  Don&#39;t have an account? <span>Register</span>{" "}
-                </p>
-                <p
-                  className="text-sm -mb-5 cursor-pointer underline"
-                  onClick={() => setMode(MODE.RESET_PASSWORD)}
-                >
-                  Forgot Password?
-                </p>
-              </div>
-            )}
-
-            {mode === MODE.REGISTER && (
-              <div
-                className="text-sm -mb-5 cursor-pointer underline"
-                onClick={() => setMode(MODE.LOGIN)}
+              <button
+                className="mt-2 w-full rounded-md bg-black text-white py-3 px-4 disabled:cursor-not-allowed"
+                type="submit"
               >
-                Have an existing account?Login
-              </div>
-            )}
+                {buttonTitle}
+              </button>
 
-            {mode === MODE.RESET_PASSWORD && (
-              <div
-                className="text-sm -mb-5 cursor-pointer underline"
-                onClick={() => setMode(MODE.LOGIN)}
-              >
-                Go back to Login
-              </div>
-            )}
-
-            {mode === MODE.CONFIRM_EMAIL && (
-              <div
-                className="text-sm -mb-5 cursor-pointer underline"
-                onClick={() => setMode(MODE.LOGIN)}
-              >
-                Go back to Login
-              </div>
-            )}
-
-            <button
-              className="w-full rounded-md bg-black text-white py-3 px-4 disabled:cursor-not-allowed"
-              disabled={isLoading}
-            >
-              {isLoading ? "Loading..." : buttonTitle}
-            </button>
-
-            {error && (
-              <div
-                className="order-1 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                role="alert"
-              >
-                <span className="block sm:inline">{error}</span>
-                <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
-                  <svg
-                    className="fill-current h-6 w-6 text-red-500"
-                    role="button"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
+              {mode === MODE.LOGIN && (
+                <div className="flex items-center justify-between mt-1">
+                  <Link href="/signup" className="text-sm underline">Don&#39;t have an account? Sign up</Link>
+                  <button
+                    type="button"
+                    className="text-sm underline"
+                    onClick={() => setMode(MODE.RESET_PASSWORD)}
                   >
-                    <title>Close</title>
-                    <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
-                  </svg>
-                </span>
-              </div>
-            )}
+                    Forgot Password?
+                  </button>
+                </div>
+              )}
 
-            {success && (
-              <div
-                className="order-1 bg-teal-100 border border-teal-400 text-teal-700 px-4 py-3 rounded relative"
-                role="alert"
-              >
-                
-                <span className="block sm:inline">
-                  {success}
-                </span>
-                <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
-                  <svg
-                    className="fill-current h-6 w-6 text-teal-500"
-                    role="button"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                  >
-                    <title>Close</title>
-                    <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
-                  </svg>
-                </span>
-              </div>
-            )}
+              {(mode === MODE.RESET_PASSWORD || mode === MODE.CONFIRM_EMAIL) && (
+                <button
+                  type="button"
+                  className="text-sm underline"
+                  onClick={() => setMode(MODE.LOGIN)}
+                >
+                  Go back to Login
+                </button>
+              )}
+
+              {error && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                  <span className="block sm:inline">{error}</span>
+                </div>
+              )}
+
+              {success && (
+                <div className="bg-teal-100 border border-teal-400 text-teal-700 px-4 py-3 rounded relative" role="alert">
+                  <span className="block sm:inline">{success}</span>
+                </div>
+              )}
+            </div>
           </form>
-        </div>
-
-        {/* Image Section */}
-        <div className=" hidden order-1 w-full md:w-1/4 mt-0 md:flex justify-center">
-          <Image
-            src="/nxt_vertical_banner.jpg" // replace with your image in /public
-            alt="Hero Image"
-            width={500}
-            height={700}
-            className="rounded-r-xl inset-shadow-sm object-cover"
-          />
         </div>
       </div>
     </section>

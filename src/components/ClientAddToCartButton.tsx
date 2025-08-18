@@ -1,31 +1,37 @@
 "use client";
 
-import { useCartStore } from "@/hooks/useCartStore";
 import { useWixClient } from "@/hooks/useWixClientContext";
+import { useCartStore } from "@/hooks/useCartStore";
 import { useNotification } from "@/context/NotificationContext";
 
-const ClientAddToCartButton = ({ productId, variantId, stockNumber }: { productId: string, variantId: string, stockNumber: number }) => {
-  const wixClient = useWixClient();
-  const { addNotification } = useNotification();
+interface ClientAddToCartButtonProps {
+  productId: string;
+  variantId: string;
+  stockNumber: number;
+}
+
+const ClientAddToCartButton = ({ productId, variantId, stockNumber }: ClientAddToCartButtonProps) => {
+  const { wixClient } = useWixClient();
   const { addItem } = useCartStore();
-  const disabled = stockNumber < 1;
+  const { addNotification } = useNotification();
+
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await addItem(wixClient, productId, variantId, 1);
+      addNotification("Product added to cart successfully!");
+    } catch {
+      addNotification("Failed to add product to cart", "error");
+    }
+  };
 
   return (
     <button
-      className="rounded-lg w-full ring-2 py-2 px-4 text-md hover:bg-[#475A47] hover:text-white disabled:cursor-not-allowed disabled:bg-pink-200 disabled:ring-0 disabled:text-white disabled:ring-none mt-2"
-      disabled={disabled}
-      onClick={async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        try {
-          await addItem(wixClient, productId, variantId, 1);
-          addNotification("Product added to cart successfully!");
-        } catch {
-          addNotification("Failed to add product to cart", "error");
-        }
-      }}
+      onClick={handleAddToCart}
+      disabled={stockNumber === 0}
+      className="w-full bg-black text-white py-3 px-4 rounded-md hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
     >
-      {disabled ? "Out of Stock" : "Add to Cart"}
+      {stockNumber === 0 ? "Out of Stock" : "Add to Cart"}
     </button>
   );
 };

@@ -43,7 +43,7 @@ const Slider = () => {
     }, []);
 
     return (
-        <div className="h-[90vh] overflow-hidden">
+        <div className="h-[90vh] overflow-hidden relative">
             <div
                 className="w-max h-full mt-0 flex transition-all ease-in-out duration-1000"
                 style={{ transform: `translateX(-${current * 100}vw)` }}
@@ -56,7 +56,7 @@ const Slider = () => {
                        
                         {/* IMAGE CONTAINER */}
                         <div className="h-full w-full relative">
-                            <Link href={slide.url}>
+                            <Link href={slide.url} className="block h-full w-full relative">
                             <Image
                                 src={slide.img}
                                 alt=""
@@ -69,21 +69,19 @@ const Slider = () => {
                     </div>
                 ))}
             </div>
-            {/* <div className="absolute m-auto left-1/2 bottom-20 flex gap-4">
+            {/* Navigation Dots */}
+            <div className="absolute bottom-24 left-16 flex gap-4">
               {slides.map((slide, index) => (
-                  <div
-                      className={`w-3 h-3  rounded-full ring-1 ring-gray-600 cursor-pointer flex items-center justify-center ${
-                          current === index ? "scale-150" : ""
-                      }`}
+                  <button
+                      type="button"
+                      aria-label={`Go to slide ${index + 1}`}
+                      className={`w-4 h-4 rounded-full cursor-pointer flex items-center justify-center transition-all duration-300 shadow-lg ${current === index ? "scale-125 bg-gray-800 ring-2 ring-gray-900" : "bg-gray-600/80 ring-1 ring-gray-700 hover:bg-gray-700"}`}
                       key={slide.id}
                       onClick={() => setCurrent(index)}
                   >
-                      {current === index && (
-                          <div className="w-[6px] h-[6px] bg-gray-600 rounded-full"></div>
-                      )}
-                  </div>
+                  </button>
               ))}
-            </div> */}
+            </div>
         </div>
     );
 };

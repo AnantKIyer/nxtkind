@@ -2,7 +2,6 @@ import Slider from "@/components/Slider";
 import BlendShowcase from "@/components/BlendShowcase";
 import ComparisonTable from "@/components/ComparisonTable";
 import IngredientsSection from "@/components/Ingredients";
-import ParallaxContainer from "@/components/ParallaxContainer";
 import ReviewCarousel from "@/components/ReviewsCarousel";
 
 const HomePage = async () => {
@@ -11,11 +10,10 @@ const HomePage = async () => {
   // console.log(res)
 
   return (
-    <main>
-      <ParallaxContainer>
+    <main className="overflow-x-clip">
         <Slider />
         <BlendShowcase />
-      </ParallaxContainer>
+      
       <ComparisonTable />
       <IngredientsSection />
 

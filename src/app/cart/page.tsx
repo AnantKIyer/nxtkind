@@ -1,27 +1,29 @@
-'use client';
-import React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { useCartStore } from "@/hooks/useCartStore";
-import { media as wixMedia } from "@wix/sdk";
-import { useWixClient } from "@/hooks/useWixClientContext";
-import { currentCart } from "@wix/ecom";
+"use client";
 
-// Type guard for subtotal
+import { useWixClient } from "@/hooks/useWixClientContext";
+import { useCartStore } from "@/hooks/useCartStore";
+import { currentCart } from "@wix/ecom";
+import { useState } from "react";
+
 function hasSubtotal(cart: unknown): cart is { subtotal: { amount: number } } {
   return (
-    typeof cart === 'object' &&
     cart !== null &&
+    typeof cart === 'object' &&
     'subtotal' in cart &&
-    typeof (cart as { subtotal?: { amount?: unknown } }).subtotal?.amount === 'number'
+    cart.subtotal !== null &&
+    typeof cart.subtotal === 'object' &&
+    'amount' in cart.subtotal &&
+    typeof cart.subtotal.amount === 'number'
   );
 }
 
 const CartPage = () => {
-  const wixClient = useWixClient();
+  const { wixClient } = useWixClient();
   const { cart, isLoading, addItem, removeItem } = useCartStore();
+  const [checkoutError, setCheckoutError] = useState("");
 
   const handleCheckout = async () => {
+    setCheckoutError("");
     try {
       const checkout = await wixClient.currentCart.createCheckoutFromCurrentCart({
         channelType: currentCart.ChannelType.WEB,
@@ -37,11 +39,12 @@ const CartPage = () => {
         window.location.href = redirectSession.fullUrl;
       }
     } catch (err) {
+      setCheckoutError("Checkout failed. Please try again.");
       console.log(err);
     }
   };
 
-  const isEmpty = !cart.lineItems || cart.lineItems.length === 0;
+  const isEmpty = !cart?.lineItems || cart.lineItems.length === 0;
 
   // Try to use cart.subtotal?.amount, otherwise sum up lineItems
   const subtotal = hasSubtotal(cart)
@@ -58,12 +61,8 @@ const CartPage = () => {
     const productId = item.catalogReference?.catalogItemId || "";
     const variantId = item.catalogReference?.options?.variantId || "";
     if (productId) {
-      addItem(
-        wixClient,
-        productId,
-        variantId,
-        1 // Always add 1 more
-      );
+      const newQty = (item.quantity ?? 1) + 1;
+      addItem(wixClient, productId, variantId, newQty);
     }
   };
 
@@ -71,104 +70,117 @@ const CartPage = () => {
   const handleSubtract = (item: currentCart.LineItem) => {
     const productId = item.catalogReference?.catalogItemId || "";
     const variantId = item.catalogReference?.options?.variantId || "";
-    if (productId && item.quantity) {
-      if (item.quantity <= 1) {
-        removeItem(wixClient, item._id!); // Completely remove from cart
+    if (productId) {
+      const currentQty = item.quantity ?? 1;
+      if (currentQty <= 1) {
+        removeItem(wixClient, item._id || "");
       } else {
-        const quantity = item.quantity-1;
-        removeItem(wixClient, item._id!);
-        addItem(wixClient, productId, variantId, quantity); // Decrease quantity
+        addItem(wixClient, productId, variantId, currentQty - 1);
       }
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  if (isEmpty) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen gap-4">
+        <h1 className="text-2xl font-bold">Your cart is empty</h1>
+        <p className="text-gray-600">Add some items to get started!</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-[calc(100vh-80px)] bg-white flex flex-col px-2 md:px-8 py-8">
-      <div className="max-w-6xl w-full mx-auto">
-        <div className="mb-10">
-          <Link href="/list" className="text-gray-700 flex items-center mb-4 hover:underline text-base">
-            <span className="mr-2 text-2xl">&#8592;</span> Back
-          </Link>
-          <h1 className="text-3xl md:text-4xl font-extrabold mb-2 text-gray-900 tracking-tight">READY TO FUEL UP?</h1>
-          <p className="text-lg text-gray-600">You&apos;re one step closer to better sips and stronger days.</p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Cart Items */}
-          <div className="md:col-span-2">
-            <div className="bg-white rounded-2xl shadow-xl p-0 md:p-6">
-              {isEmpty ? (
-                <div className="text-center text-gray-500 py-16">
-                  <p className="text-lg mb-4">Your cart is empty.</p>
-                  <Link href="/list" className="inline-block bg-gray-800 text-white px-6 py-2 rounded-full font-medium hover:bg-gray-900 transition-colors">Browse Products</Link>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Cart Items */}
+        <div className="lg:col-span-2">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-semibold mb-4">Cart Items</h2>
+            <div className="space-y-4">
+              {cart?.lineItems?.map((item) => (
+                <div key={item._id} className="flex items-center gap-4 p-4 border rounded-lg">
+                  <div className="flex-1">
+                    <h3 className="font-medium">
+                      {typeof item.productName === 'string' 
+                        ? item.productName 
+                        : item.productName?.original || 'Product'}
+                    </h3>
+                    <p className="text-gray-600 text-sm">
+                      ₹{item.price?.amount} x {item.quantity}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleSubtract(item)}
+                      className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300"
+                    >
+                      -
+                    </button>
+                    <span className="w-8 text-center">{item.quantity}</span>
+                    <button
+                      onClick={() => handleAdd(item)}
+                      className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300"
+                    >
+                      +
+                    </button>
+                    <button
+                      onClick={() => removeItem(wixClient, item._id || "")}
+                      className="ml-4 text-red-500 hover:text-red-700"
+                    >
+                      Remove
+                    </button>
+                  </div>
                 </div>
-              ) : (
-                <div>
-                  {cart?.lineItems?.map((item, idx) => (
-                    <div key={item._id} className={`flex items-center py-8 px-4 md:px-0 ${idx !== (cart.lineItems?.length ?? 0) - 1 ? 'border-b border-gray-200' : ''}`}>
-                      <div className="w-24 h-28 flex-shrink-0 relative">
-                        {item.image && (
-                          <Image
-                            src={wixMedia.getScaledToFillImageUrl(item.image, 96, 112, {})}
-                            alt={item.productName?.original || "Product image"}
-                            fill
-                            className="object-contain rounded-md"
-                          />
-                        )}
-                      </div>
-                      <div className="flex-1 ml-6">
-                        <div className="font-bold text-lg md:text-xl text-gray-900 mb-1 uppercase tracking-wide">{item.productName?.original}</div>
-                        <div className="text-gray-500 text-sm mb-2">{'UNFLAVOURED'}</div>
-                        <div className="text-gray-400 text-xs mb-2">1kg / x{item.quantity ?? 1}</div>
-                        <div className="flex items-center gap-3 mt-2">
-                          <button
-                            className="w-7 h-7 rounded-full border border-gray-300 flex items-center justify-center text-xl text-gray-700 hover:bg-gray-100"
-                            disabled={isLoading || (item.quantity ?? 1) <= 1}
-                            onClick={() => handleSubtract(item)}
-                          >-</button>
-                          <span className="text-lg font-medium w-6 text-center">{item.quantity ?? 1}</span>
-                          <button
-                            className="w-7 h-7 rounded-full border border-gray-300 flex items-center justify-center text-xl text-gray-700 hover:bg-gray-100"
-                            disabled={isLoading}
-                            onClick={() => handleAdd(item)}
-                          >+</button>
-                        </div>
-                      </div>
-                      <div className="ml-auto text-lg font-semibold text-gray-900">₹{item.price?.amount}</div>
-                    </div>
-                  ))}
-                </div>
-              )}
+              ))}
             </div>
           </div>
-          {/* Cart Total */}
-          <div className="bg-white rounded-2xl shadow-xl p-6 h-fit flex flex-col">
-            <h2 className="text-xl font-bold mb-6 tracking-wide">CART TOTAL</h2>
-            <div className="flex justify-between text-gray-600 mb-3 text-sm">
-              <span>Shipping (3-5 Business Day)</span>
-              <span className="font-medium">{shipping === 0 ? 'Free' : `₹${shipping}`}</span>
+        </div>
+
+        {/* Order Summary */}
+        <div className="lg:col-span-1">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span>Subtotal:</span>
+                <span>₹{subtotal}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Shipping:</span>
+                <span>₹{shipping}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Tax:</span>
+                <span>₹{tax}</span>
+              </div>
+              <div className="border-t pt-2">
+                <div className="flex justify-between font-semibold">
+                  <span>Total:</span>
+                  <span>₹{total}</span>
+                </div>
+              </div>
             </div>
-            <div className="flex justify-between text-gray-600 mb-3 text-sm">
-              <span>Tax (Estimated For India)</span>
-              <span className="font-medium">₹{tax}</span>
-            </div>
-            <div className="flex justify-between text-gray-600 mb-3 text-sm">
-              <span>Subtotal</span>
-              <span className="font-medium">₹{subtotal}</span>
-            </div>
-            <div className="flex justify-between text-gray-900 text-lg font-bold border-t border-gray-200 pt-4 mt-4 mb-6">
-              <span>Total</span>
-              <span>₹{total}</span>
-            </div>
+            
             <button
-              className="w-full bg-gray-800 text-white py-3 rounded-full font-semibold hover:bg-gray-900 transition-colors disabled:cursor-not-allowed disabled:opacity-75 mb-4"
-              disabled={isLoading || isEmpty}
               onClick={handleCheckout}
+              className="w-full mt-6 bg-black text-white py-3 px-4 rounded-md hover:bg-gray-800 transition-colors"
             >
-              PROCEED TO CHECKOUT
+              Proceed to Checkout
             </button>
-            <Link href="/list" className="flex items-center justify-center text-gray-700 hover:underline text-base">
-              <span className="mr-2 text-2xl">&#8592;</span> CONTINUE SHOPPING
-            </Link>
+            
+            {checkoutError && (
+              <p className="text-red-500 text-sm mt-2">{checkoutError}</p>
+            )}
           </div>
         </div>
       </div>

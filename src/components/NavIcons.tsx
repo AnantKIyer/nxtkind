@@ -2,10 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState, useRef } from "react";
 import { useWixClient } from "@/hooks/useWixClientContext";
-import Cookies from "js-cookie";
 import { useCartStore } from "@/hooks/useCartStore";
 
 const NavIcons = () => {
@@ -13,97 +12,134 @@ const NavIcons = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const router = useRouter();
+    const pathname = usePathname();
 
-    const wixClient = useWixClient();
-    const isLoggedIn = wixClient.auth.loggedIn();
+    const { wixClient, isLoggedIn, logout, user } = useWixClient();
 
-    console.log(isLoggedIn);
-
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    
     const handleProfile = () => {
         if (!isLoggedIn) {
             router.push("/login");
         } else {
-            setIsProfileOpen((prev) => !prev);
+            router.push("/profile");
         }
     };
 
-    // AUTH WITH WIX-MANAGED AUTH
+    // Close dropdown on outside click
+    useEffect(() => {
+        if (!isProfileOpen) return;
+        function handleClick(e: MouseEvent) {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+                setIsProfileOpen(false);
+            }
+        }
+        window.addEventListener("mousedown", handleClick);
+        return () => window.removeEventListener("mousedown", handleClick);
+    }, [isProfileOpen]);
 
-    // const login = async () => {
-    //     try {
-    //         if (!process.env.NEXT_PUBLIC_WIX_CLIENT_ID) {
-    //             console.error("WIX_CLIENT_ID is not defined");
-    //             return;
-    //         }
-
-    //         const loginRequestData = wixClient.auth.generateOAuthData(
-    //             window.location.origin
-    //         );
-            
-    //         console.log("Login request data:", loginRequestData);
-    //         console.log(isLoggedIn)
-         
-    //         localStorage.setItem("oAuthRedirectData", JSON.stringify(loginRequestData));
-    //         const { authUrl } = await wixClient.auth.getAuthUrl(loginRequestData);
-            
-    //         if (!authUrl) {
-    //             console.error("No auth URL generated");
-    //             return;
-    //         }
-            
-    //         window.location.href = authUrl;
-    //         isLoggedIn = true;
-    //         setIsProfileOpen(true)
-    //     } catch (error) {
-    //         console.error("Login error:", error);
-    //     }
-    // };
+    // Close dropdown on navigation
+    useEffect(() => {
+        setIsProfileOpen(false);
+    }, [pathname]);
 
     const handleLogout = async () => {
-        setIsLoading(true);
-        Cookies.remove("refreshToken");
-        const { logoutUrl } = await wixClient.auth.logout(window.location.href);
-        setIsLoading(false);
-        setIsProfileOpen(false);
-        router.push(logoutUrl);
-        router.push('/');
+        try {
+            setIsLoading(true);
+            await logout();
+            setIsProfileOpen(false);
+            router.push('/');
+        } catch (error) {
+            console.error("Logout error:", error);
+            setIsLoading(false);
+            setIsProfileOpen(false);
+            // Fallback logout - just redirect to home
+            router.push('/');
+        }
     };
-
 
     const { counter, getCart } = useCartStore();
 
     useEffect(() => {
-        getCart(wixClient);
-    }, [wixClient, getCart]);
+        // Only try to get cart if user is logged in
+        if (isLoggedIn) {
+            getCart(wixClient);
+        }
+    }, [wixClient, getCart, isLoggedIn]);
+
+    // Get profile image source
+    const getProfileImageSrc = () => {
+        if (user?.profile?.picture) {
+            return user.profile.picture;
+        }
+        return isLoggedIn ? "/woman.png" : "/profile.png";
+    };
+
+    // Get user display name
+    const getUserDisplayName = () => {
+        if (user?.contact?.firstName && user?.contact?.lastName) {
+            return `${user.contact.firstName} ${user.contact.lastName}`;
+        }
+        if (user?.contact?.firstName) {
+            return user.contact.firstName;
+        }
+        if (user?.loginEmail) {
+            return user.loginEmail.split('@')[0];
+        }
+        return "User";
+    };
 
     return (
         <div className="flex items-center gap-4 xl:gap-6 relative">
-            <Image
-        src="/profile.png"
-        alt=""
-        width={22}
-        height={22}
-        className="cursor-pointer"
-        // onClick={login}
-        onClick={handleProfile}
-      />
-      {isProfileOpen && (
-        <div className="absolute p-4 rounded-md top-12 left-0 bg-white text-sm shadow-[0_3px_10px_rgb(0,0,0,0.2)] z-20">
-          <Link href="/profile">Profile</Link>
-          <div className="mt-2 cursor-pointer" onClick={handleLogout}>
-            {isLoading ? "Logging out" : "Logout"}
-          </div>
-        </div>
-      )}
+            <div className="relative">
+                <Image
+                    src={getProfileImageSrc()}
+                    alt="Profile"
+                    width={22}
+                    height={22}
+                    className="cursor-pointer rounded-full object-cover"
+                    onClick={handleProfile}
+                />
+                {isLoggedIn && (
+                    <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                )}
+            </div>
+            
+            {isProfileOpen && isLoggedIn && (
+                <div ref={dropdownRef} className="absolute p-4 rounded-md top-12 left-0 bg-white text-sm shadow-[0_3px_10px_rgb(0,0,0,0.2)] z-20 min-w-[200px] flex flex-col">
+                    <div className="flex items-center gap-3 mb-3 pb-3 border-b border-gray-200">
+                        <Image
+                            src={getProfileImageSrc()}
+                            alt="Profile"
+                            width={32}
+                            height={32}
+                            className="rounded-full object-cover"
+                        />
+                        <div>
+                            <p className="font-medium text-gray-900">{getUserDisplayName()}</p>
+                            <p className="text-xs text-gray-500">{user?.loginEmail}</p>
+                        </div>
+                    </div>
+                    <Link href="/profile" className="hover:text-green-600 py-1">Profile</Link>
+                    <button
+                        className="mt-2 text-left hover:text-red-600 py-1"
+                        onClick={handleLogout}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? "Logging out..." : "Logout"}
+                    </button>
+                </div>
+            )}
+            
             <div
                 className="relative cursor-pointer"
                 onClick={() => router.push('/cart')}
             >
                 <Image src="/cart.png" alt="" width={22} height={22} />
                 {counter > 0 && (
-                  <div className="absolute -top-4 -right-4 w-6 h-6 bg-[#68D335] rounded-full text-white text-sm flex items-center justify-center">
-                    {counter}
-                  </div>
+                    <div className="absolute -top-4 -right-4 w-6 h-6 bg-[#68D335] rounded-full text-white text-sm flex items-center justify-center">
+                        {counter}
+                    </div>
                 )}
             </div>
         </div>
