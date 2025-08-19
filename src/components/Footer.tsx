@@ -53,7 +53,7 @@ const Footer = () => {
 
                 {/* Centered Logo */}
                 <div className="mt-6 flex justify-center">
-                    <Image src='/footer-logo.png' height={500} width={500} className=''  alt='Nxtkind Logo'/>
+                    <Image src='/nxt-logo.png' height={500} width={500} className=''  alt='Nxtkind Logo'/>
                 </div>
             </div>
         </footer>

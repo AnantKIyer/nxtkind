@@ -31,34 +31,52 @@ interface ProductImage {
 
 const ProductImages = ({ items }: { items: ProductImage[] }) => {
     const [index, setIndex] = useState(0);
+    
+    if (!items || items.length === 0) {
+        return (
+            <div className="bg-gray-200 rounded-2xl h-96 flex items-center justify-center">
+                <span className="text-gray-500">No image available</span>
+            </div>
+        );
+    }
+    
     return (
-        <div className="">
-            <div className="h-[500px] relative">
+        <div className="space-y-6">
+            {/* Main Image */}
+            <div className="relative h-96 md:h-[500px] rounded-2xl overflow-hidden shadow-lg">
                 <Image
                     src={items[index]?.image?.url || ''}
-                    alt=""
+                    alt="Product"
                     fill
-                    sizes="50vw"
-                    className="object-cover rounded-md"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover transition-transform duration-300 hover:scale-105"
                 />
             </div>
-            <div className="flex justify-between gap-4 mt-8">
-                {items.map((item: ProductImage, i: number) => (
-                    <div
-                        className="w-1/4 h-32 relative gap-4 mt-8 cursor-pointer"
-                        key={item._id}
-                        onClick={() => setIndex(i)}
-                    >
-                        <Image
-                            src={item.image?.url || ''}
-                            alt=""
-                            fill
-                            sizes="30vw"
-                            className="object-cover rounded-md"
-                        />
-                    </div>
-                ))}
-            </div>
+            
+            {/* Thumbnail Images */}
+            {items.length > 1 && (
+                <div className="grid grid-cols-4 gap-4">
+                    {items.map((item: ProductImage, i: number) => (
+                        <div
+                            className={`relative h-24 rounded-xl overflow-hidden cursor-pointer transition-all duration-300 ${
+                                i === index 
+                                    ? 'ring-2 ring-green-500 ring-offset-2' 
+                                    : 'hover:ring-2 hover:ring-gray-300 ring-offset-2'
+                            }`}
+                            key={item._id}
+                            onClick={() => setIndex(i)}
+                        >
+                            <Image
+                                src={item.image?.url || ''}
+                                alt={`Product view ${i + 1}`}
+                                fill
+                                sizes="25vw"
+                                className="object-cover"
+                            />
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

@@ -43,7 +43,7 @@ const Slider = () => {
     }, []);
 
     return (
-        <div className="h-screen overflow-hidden relative">
+        <div className="h-screen overflow-hidden relative mt-14">
             <div
                 className="flex h-full transition-all ease-in-out duration-1000"
                 style={{ 

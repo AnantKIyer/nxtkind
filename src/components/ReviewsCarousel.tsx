@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 
 interface Review {
   image: string; // reviewer photo url
@@ -28,121 +29,153 @@ export default function ReviewsCarousel({ reviews }: ReviewsCarouselProps) {
   const prev = () => setCurrent((c) => (c - 1 + reviews.length) % reviews.length);
   const next = () => setCurrent((c) => (c + 1) % reviews.length);
 
-  // Handle fewer than 3 reviews gracefully
-  const getIndex = (offset: number) => {
-    if (reviews.length < 3) return (current + offset + reviews.length) % reviews.length;
-    return (current + offset + reviews.length) % reviews.length;
-  };
-
   return (
-    <section className="w-full py-12 flex flex-col items-center relative select-none">
-      <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-center mb-10">
-        SIPS OF WELLNESS, SHARED BY YOU.
-      </h2>
-      <div className="relative flex items-center justify-center w-full max-w-3xl min-h-[320px]">
-        {/* Fixed border container */}
-        <div className="relative bg-white border rounded-xl shadow-md flex items-center px-4 md:px-10 py-8 w-full z-10 overflow-hidden min-h-[256px]">
-          {/* AnimatePresence for center review */}
-          <AnimatePresence initial={false} mode="wait">
-            <motion.div
-              key={current}
-              className="flex items-center w-full"
-              initial={{ opacity: 0, x: 80 }}
-              animate={{ opacity: 1, x: 0, scale: 1.04, zIndex: 2 }}
-              exit={{ opacity: 0, x: -80 }}
-              transition={{ type: 'spring', duration: 0.5 }}
-              style={{ width: '100%' }}
-            >
-              <motion.img
-                src={reviews[current].image}
-                alt=""
-                className="h-40 w-40 min-w-[10rem] object-cover rounded-xl mr-6 shadow-md"
-                initial={{ scale: 0.95, opacity: 0.8 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                draggable={false}
-              />
-              <motion.div
-                className="flex flex-col justify-between h-full flex-1 min-w-0"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, delay: 0.15 }}
-              >
-                <h3 className="font-bold text-lg md:text-xl mb-2 uppercase">{reviews[current].heading}</h3>
-                <blockquote className="text-gray-700 text-base md:text-lg mb-6">{`“${reviews[current].quote}”`}</blockquote>
-                <div className="text-right font-medium text-gray-700">{`— ${reviews[current].author}`}</div>
-              </motion.div>
-            </motion.div>
-          </AnimatePresence>
+    <section className="bg-gradient-to-b from-white to-gray-50 py-20 px-8 md:px-24">
+      <div className="max-w-6xl mx-auto">
+        {/* Header Section */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            What Our <span className="text-green-600">Community</span> Says
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Real stories from real people who have transformed their nutrition and performance with NXTKIND.
+          </p>
+        </div>
 
-          {/* Left and right images, behind border, partially visible */}
+        {/* Testimonials Carousel */}
+        <div className="relative">
+          {/* Main Testimonial */}
+          <div className="relative bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+            <AnimatePresence initial={false} mode="wait">
+              <motion.div
+                key={current}
+                className="flex flex-col lg:flex-row items-center p-8 md:p-12"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ type: 'spring', duration: 0.6 }}
+              >
+                {/* Reviewer Image */}
+                <div className="lg:w-1/3 mb-8 lg:mb-0 lg:pr-8">
+                  <div className="relative">
+                    <div className="w-48 h-48 mx-auto lg:mx-0 relative">
+                      <Image
+                        src={reviews[current].image}
+                        alt={reviews[current].author}
+                        fill
+                        className="object-cover rounded-2xl shadow-lg"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
+                    </div>
+                    <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                      <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Testimonial Content */}
+                <div className="lg:w-2/3 lg:pl-8">
+                  <div className="text-center lg:text-left">
+                    <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+                      {reviews[current].heading}
+                    </h3>
+                    <blockquote className="text-lg md:text-xl text-gray-700 leading-relaxed mb-6 italic">
+                      &ldquo;{reviews[current].quote}&rdquo;
+                    </blockquote>
+                    <div className="flex items-center justify-center lg:justify-start">
+                      <div className="w-12 h-0.5 bg-green-500 mr-4"></div>
+                      <span className="text-lg font-semibold text-gray-900">
+                        {reviews[current].author}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Navigation Arrows */}
+            {reviews.length > 1 && (
+              <>
+                <button
+                  onClick={prev}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors duration-200 z-10"
+                  aria-label="Previous Review"
+                >
+                  <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={next}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors duration-200 z-10"
+                  aria-label="Next Review"
+                >
+                  <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Preview Images */}
           {reviews.length > 1 && (
-            <>
-              <motion.button
-                className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-0 focus:outline-none"
-                onClick={prev}
-                aria-label="Previous Review"
-                whileTap={{ scale: 0.95 }}
-                style={{ pointerEvents: 'auto', background: 'transparent', border: 'none', padding: 0 }}
-              >
-                <motion.img
-                  src={reviews[getIndex(-1)].image}
-                  alt=""
-                  className="h-32 w-32 object-cover rounded-xl shadow-lg opacity-40 grayscale border-4 border-white pointer-events-none"
-                  initial={{ scale: 0.85, opacity: 0.3 }}
-                  animate={{ scale: 0.92, opacity: 0.4 }}
-                  exit={{ scale: 0.8, opacity: 0.2 }}
-                  transition={{ duration: 0.5 }}
-                  draggable={false}
-                  style={{ zIndex: 0 }}
-                />
-              </motion.button>
-              <motion.button
-                className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-0 focus:outline-none"
-                onClick={next}
-                aria-label="Next Review"
-                whileTap={{ scale: 0.95 }}
-                style={{ pointerEvents: 'auto', background: 'transparent', border: 'none', padding: 0 }}
-              >
-                <motion.img
-                  src={reviews[getIndex(1)].image}
-                  alt=""
-                  className="h-32 w-32 object-cover rounded-xl shadow-lg opacity-40 grayscale border-4 border-white pointer-events-none"
-                  initial={{ scale: 0.85, opacity: 0.3 }}
-                  animate={{ scale: 0.92, opacity: 0.4 }}
-                  exit={{ scale: 0.8, opacity: 0.2 }}
-                  transition={{ duration: 0.5 }}
-                  draggable={false}
-                  style={{ zIndex: 0 }}
-                />
-              </motion.button>
-            </>
+            <div className="hidden lg:flex justify-center mt-8 space-x-4">
+              {reviews.map((review, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrent(index)}
+                  className={`relative w-16 h-16 rounded-xl overflow-hidden transition-all duration-300 ${
+                    index === current ? 'ring-2 ring-green-500 ring-offset-2 scale-110' : 'opacity-60 hover:opacity-80'
+                  }`}
+                >
+                  <Image
+                    src={review.image}
+                    alt={review.author}
+                    fill
+                    className="object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Mobile Dots */}
+          {reviews.length > 1 && (
+            <div className="flex justify-center mt-8 lg:hidden">
+              <div className="flex space-x-2">
+                {reviews.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrent(index)}
+                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                      index === current ? 'bg-green-500 scale-125' : 'bg-gray-300 hover:bg-gray-400'
+                    }`}
+                    aria-label={`Go to review ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
           )}
         </div>
-      </div>
 
-      {/* Mobile navigation */}
-      {reviews.length > 1 && (
-        <div className="flex justify-center gap-3 mt-8 md:hidden">
-          <button
-            type="button"
-            className="h-10 w-10 rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300 transition"
-            onClick={prev}
-            aria-label="Previous Review"
-          >
-            ‹
-          </button>
-          <button
-            type="button"
-            className="h-10 w-10 rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300 transition"
-            onClick={next}
-            aria-label="Next Review"
-          >
-            ›
-          </button>
+        {/* Bottom CTA */}
+        <div className="text-center mt-16">
+          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              Join Our Community
+            </h3>
+            <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+              Experience the same transformation and share your story with thousands of others who have upgraded their nutrition game.
+            </p>
+            <button className="px-8 py-3 bg-green-600 text-white font-semibold rounded-full hover:bg-green-700 transition-colors duration-200">
+              Start Your Journey
+            </button>
+          </div>
         </div>
-      )}
+      </div>
     </section>
   );
 }

@@ -2,110 +2,169 @@ import { science } from "@/data/data";
 
 export default function SciencePage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="scroll-smooth text-gray-800 font-sans pt-20">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-green-600 to-blue-600 text-white py-20">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl font-bold mb-4">The Science Behind NXTKIND</h1>
-          <p className="text-xl max-w-3xl mx-auto">
-            Discover the clinical precision and scientific formulation that makes NXTKIND more than just a supplement
+      <section className="h-[40vh] min-h-[400px] flex flex-col md:flex-row items-center justify-between px-8 md:px-24 bg-gradient-to-r from-green-50 to-blue-50">
+        <div className="w-full md:w-2/3 py-8 md:py-16">
+          <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+            The Science Behind<br /> <span className="text-green-600">NXTKIND</span>
+          </h1>
+          <p className="mt-6 text-lg text-gray-600 max-w-2xl">
+                         Discover the clinical precision and scientific formulation that makes NXTKIND more than just a supplement—it&apos;s nutrition engineered for performance.
           </p>
         </div>
-      </div>
+        <div className="w-full md:w-1/3 mt-8 md:mt-0 flex justify-center">
+          <div className="bg-white p-8 rounded-3xl shadow-lg">
+            <div className="text-6xl mb-4">🔬</div>
+            <p className="text-sm text-gray-600 text-center">Scientifically Formulated</p>
+          </div>
+        </div>
+      </section>
 
-      {/* Science Content */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
+      {/* Main Science Content */}
+      <section className="bg-white py-20 px-8 md:px-24">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Evidence-Based Formulation
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Every ingredient in NXTKIND is backed by clinical research and carefully selected for its proven benefits.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-3xl shadow-lg p-8 md:p-12 mb-16">
             <div className="prose prose-lg max-w-none">
-              <div className="whitespace-pre-line text-gray-700 leading-relaxed">
+              <div className="whitespace-pre-line text-gray-700 leading-relaxed text-lg">
                 {science.content}
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Key Benefits Section */}
-      <div className="bg-white py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
+      {/* Key Scientific Benefits */}
+      <section className="bg-gradient-to-b from-gray-50 to-white py-20 px-8 md:px-24">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
               Key Scientific Benefits
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {/* Complete Protein */}
-              <div className="text-center p-6 rounded-xl bg-green-50 border border-green-200">
-                <div className="text-4xl mb-4">🥜</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Complete Protein Profile</h3>
-                <p className="text-gray-600">
-                  Pea + Rice protein combination provides all 9 essential amino acids with high digestibility
-                </p>
-              </div>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Our formulation delivers measurable results through clinically proven ingredients.
+            </p>
+          </div>
 
-              {/* MCT Energy */}
-              <div className="text-center p-6 rounded-xl bg-blue-50 border border-blue-200">
-                <div className="text-4xl mb-4">🥥</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">MCT Energy Boost</h3>
-                <p className="text-gray-600">
-                  Rapidly absorbed fats for sustained energy, mental clarity, and fat metabolism
-                </p>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Complete Protein */}
+            <div className="bg-white p-8 rounded-2xl shadow-lg border border-green-200 hover:shadow-xl transition-shadow duration-300">
+              <div className="text-5xl mb-6">🥜</div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Complete Protein Profile</h3>
+              <p className="text-gray-700 leading-relaxed">
+                Pea + Rice protein combination provides all 9 essential amino acids with high digestibility and bioavailability.
+              </p>
+            </div>
 
-              {/* Probiotics */}
-              <div className="text-center p-6 rounded-xl bg-purple-50 border border-purple-200">
-                <div className="text-4xl mb-4">🔬</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Advanced Probiotics</h3>
-                <p className="text-gray-600">
-                  Heat-stable strains including Bacillus Coagulans for optimal gut health
-                </p>
-              </div>
+            {/* MCT Energy */}
+            <div className="bg-white p-8 rounded-2xl shadow-lg border border-blue-200 hover:shadow-xl transition-shadow duration-300">
+              <div className="text-5xl mb-6">🥥</div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">MCT Energy Boost</h3>
+              <p className="text-gray-700 leading-relaxed">
+                Rapidly absorbed fats for sustained energy, mental clarity, and enhanced fat metabolism without crashes.
+              </p>
+            </div>
 
-              {/* Antioxidants */}
-              <div className="text-center p-6 rounded-xl bg-orange-50 border border-orange-200">
-                <div className="text-4xl mb-4">🌈</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Powerful Antioxidants</h3>
-                <p className="text-gray-600">
-                  Lutein, Lycopene, and Zeaxanthin for eye health and cellular protection
-                </p>
-              </div>
+            {/* Probiotics */}
+            <div className="bg-white p-8 rounded-2xl shadow-lg border border-purple-200 hover:shadow-xl transition-shadow duration-300">
+              <div className="text-5xl mb-6">🔬</div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Advanced Probiotics</h3>
+              <p className="text-gray-700 leading-relaxed">
+                Heat-stable strains including Bacillus Coagulans for optimal gut health and immune function.
+              </p>
+            </div>
 
-              {/* Vitamins & Minerals */}
-              <div className="text-center p-6 rounded-xl bg-red-50 border border-red-200">
-                <div className="text-4xl mb-4">💊</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Complete Nutrition</h3>
-                <p className="text-gray-600">
-                  25+ vitamins and minerals aligned with ICMR RDA standards for Indian adults
-                </p>
-              </div>
+            {/* Antioxidants */}
+            <div className="bg-white p-8 rounded-2xl shadow-lg border border-orange-200 hover:shadow-xl transition-shadow duration-300">
+              <div className="text-5xl mb-6">🌈</div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Powerful Antioxidants</h3>
+              <p className="text-gray-700 leading-relaxed">
+                Lutein, Lycopene, and Zeaxanthin for eye health, cellular protection, and anti-aging benefits.
+              </p>
+            </div>
 
-              {/* Clean Formula */}
-              <div className="text-center p-6 rounded-xl bg-gray-50 border border-gray-200">
-                <div className="text-4xl mb-4">✅</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Clean & Pure</h3>
-                <p className="text-gray-600">
-                  No artificial colors, flavors, sugars, dairy, soy, or gluten
-                </p>
+            {/* Vitamins & Minerals */}
+            <div className="bg-white p-8 rounded-2xl shadow-lg border border-red-200 hover:shadow-xl transition-shadow duration-300">
+              <div className="text-5xl mb-6">💊</div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Complete Nutrition</h3>
+              <p className="text-gray-700 leading-relaxed">
+                25+ vitamins and minerals aligned with ICMR RDA standards for optimal health and performance.
+              </p>
+            </div>
+
+            {/* Clean Formula */}
+            <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+              <div className="text-5xl mb-6">✅</div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Clean & Pure</h3>
+              <p className="text-gray-700 leading-relaxed">
+                No artificial colors, flavors, sugars, dairy, soy, or gluten. Pure nutrition without compromise.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Clinical Evidence */}
+      <section className="bg-white py-20 px-8 md:px-24">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Clinical Evidence
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Our formulation is backed by rigorous scientific research and clinical studies.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <h3 className="text-3xl font-bold text-gray-900 mb-6">Research-Backed Results</h3>
+              <p className="text-lg text-gray-700 mb-6">
+                                 Every ingredient in NXTKIND has been selected based on peer-reviewed studies and clinical trials. We don&apos;t rely on marketing claims—we rely on science.
+              </p>
+              <p className="text-lg text-gray-700 mb-6">
+                Our protein blend has been shown to support muscle recovery and satiety. MCT oils provide sustained energy without blood sugar spikes. Probiotics improve gut health and immunity.
+              </p>
+              <p className="text-lg text-gray-700">
+                The complete vitamin and mineral profile ensures you meet daily nutritional requirements, even when time is limited.
+              </p>
+            </div>
+            <div className="bg-green-100 p-8 rounded-3xl">
+              <div className="text-center">
+                <div className="text-6xl mb-6">📊</div>
+                                 <blockquote className="text-lg italic text-gray-700 mb-4">
+                   &quot;Clinical studies show that our protein blend provides 95% digestibility and complete amino acid profile.&quot;
+                 </blockquote>
+                <p className="text-sm text-gray-600">- Published Research</p>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* CTA Section */}
-      <div className="bg-gradient-to-r from-green-600 to-blue-600 text-white py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">
+      <section className="bg-gradient-to-r from-green-600 to-blue-600 text-white py-20 px-8 md:px-24">
+        <div className="max-w-6xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Experience the Science of Nutrition
           </h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Join thousands who have transformed their health with NXTKIND&apos;s scientifically formulated meal replacement system
+          <p className="text-xl mb-8 max-w-3xl mx-auto">
+                         Join thousands who have transformed their health with NXTKIND&apos;s scientifically formulated meal replacement system.
           </p>
-          <button className="px-8 py-4 bg-white text-green-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors duration-300 text-lg">
+          <button className="px-8 py-4 bg-white text-green-600 font-bold rounded-full hover:bg-gray-100 transition-colors duration-300 text-lg">
             Try NXTKIND Today
           </button>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

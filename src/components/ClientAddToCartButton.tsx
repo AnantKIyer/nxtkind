@@ -29,7 +29,7 @@ const ClientAddToCartButton = ({ productId, variantId, stockNumber }: ClientAddT
     <button
       onClick={handleAddToCart}
       disabled={stockNumber === 0}
-      className="w-full bg-black text-white py-3 px-4 rounded-md hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+      className="w-full bg-green-800 text-white py-3 px-4 rounded-xl font-semibold hover:bg-green-900 transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
     >
       {stockNumber === 0 ? "Out of Stock" : "Add to Cart"}
     </button>
