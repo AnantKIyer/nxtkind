@@ -104,7 +104,7 @@ const ComparisonTable: React.FC = () => {
                 {/* Header Section */}
                 <div className="text-center mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                        Why Choose <span className="text-green-600">NXTKIND</span>?
+                        Why Choose Nxt<span className="text-green-500">Kind</span>?
                     </h2>
                     <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                         See how NXTKIND compares to traditional meal options and junk food alternatives.

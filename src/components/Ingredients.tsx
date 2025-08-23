@@ -66,7 +66,7 @@ export default function IngredientsSection() {
         {/* Header Section */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Formulated with <span className="text-green-600">Super Ingredients</span>
+            Formulated with <br/><span className="text-green-600">Super Ingredients</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Every ingredient is carefully selected for its proven benefits, backed by science and chosen for strength.

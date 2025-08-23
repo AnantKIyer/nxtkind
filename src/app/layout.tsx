@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Poppins, League_Spartan } from "next/font/google";
 import "./globals.css";
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
@@ -11,6 +11,12 @@ const poppins = Poppins({
   weight: ['400', '500', '600', '700'],
   subsets: ["latin"],
   variable: "--font-poppins",
+});
+
+const leagueSpartan = League_Spartan({
+  weight: ['400', '500', '600', '700', '800', '900'],
+  subsets: ["latin"],
+  variable: "--font-league-spartan",
 });
 
 export const metadata: Metadata = {
@@ -26,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${poppins.variable} font-sans antialiased`}
+        className={`${poppins.variable} ${leagueSpartan.variable} font-sans antialiased`}
       >
       <WixClientContextProvider>
         <NotificationProvider>

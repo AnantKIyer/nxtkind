@@ -35,7 +35,7 @@ export default function ReviewsCarousel({ reviews }: ReviewsCarouselProps) {
         {/* Header Section */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            What Our <span className="text-green-600">Community</span> Says
+            What Our <br/> <span className="text-green-500">Community</span> Says
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Real stories from real people who have transformed their nutrition and performance with NXTKIND.

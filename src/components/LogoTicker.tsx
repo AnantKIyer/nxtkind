@@ -23,8 +23,8 @@ const icons = [
 
 export const LogoTicker = () => {
   return (
-    <div className="py-8 md:py-12 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 bg-white">
-      <div className="container">
+    <div className="py-8 md:py-12 bg-transparent w-full">
+      <div className="w-full">
         <div className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black,transparent)]">
           <motion.div className="flex gap-14 flex-none" 
           initial={{ x: 0 }}
